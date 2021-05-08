@@ -28,7 +28,7 @@ func main() {
 			words = append(words, word)
 		}
 
-		// sortArray(words, "POLISH_CI")
+		sortArray(words, "POLISH_CI")
 
 		var data []byte
 		for _, word := range words {
