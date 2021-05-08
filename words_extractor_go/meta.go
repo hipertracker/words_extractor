@@ -1,9 +1,8 @@
 package main
 
 import (
-	"io/ioutil"
-
 	"gopkg.in/yaml.v3"
+	"io/ioutil"
 )
 
 type metaConfig struct {
