@@ -1,0 +1,13 @@
+name: fast_words_cr
+version: 0.1.0
+
+authors:
+  - Jaroslaw Zabiello <hipertracker@gmail.com>
+
+targets:
+  fast_words_cr:
+    main: src/fast_words_cr.cr
+
+crystal: 1.0.0
+
+license: MIT

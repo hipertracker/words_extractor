@@ -1,0 +1,10 @@
+/docs/
+/lib/
+/bin/
+/.shards/
+*.dwarf
+/.history/
+/words/
+/fast_words_cr
+/.idea/
+/.DS_Store
