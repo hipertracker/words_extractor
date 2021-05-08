@@ -1,0 +1,11 @@
+lang: pl
+code: bg
+label: Biblia Gdańska
+year: "1632"
+tags:
+- historical
+- protestant
+info:
+  notes: Bible Works ma gorszą wersję, np. bez Rev 22:5-22 i z błędem w Ex 20:3.
+  source: BibleWorks
+
