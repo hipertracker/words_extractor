@@ -19,8 +19,7 @@ var (
 )
 
 func timeTrack(start time.Time) {
-	elapsed := time.Since(start)
-	fmt.Println("Total timing: ", elapsed)
+	fmt.Println("Total timing: ", time.Since(start))
 }
 
 func main() {

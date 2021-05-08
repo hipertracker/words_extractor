@@ -1,10 +1,10 @@
 all: build
 
 build:
-	go build -o sort-me-out *.go
+	@go build -o sort-me-out *.go
 
 run: build
-	./sort-me-out
+	@./sort-me-out
 
 test:
-	go test ./... -v -race -cover
+	@go test ./... -v -race -cover
