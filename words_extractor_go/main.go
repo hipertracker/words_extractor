@@ -18,8 +18,14 @@ var (
 	res resultsArray
 )
 
+func timeTrack(start time.Time) {
+	elapsed := time.Since(start)
+	fmt.Println("Total timing: ", elapsed)
+}
+
 func main() {
 	t1 := time.Now()
+	defer timeTrack(t1)
 	folder := "./words"
 	prepareFolder(folder, "*.txt")
 
@@ -37,5 +43,4 @@ func main() {
 			panic(err)
 		}
 	}
-	fmt.Println("Total timing: ", time.Since(t1))
 }
