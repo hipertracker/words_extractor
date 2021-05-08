@@ -7,7 +7,7 @@ Text source: 79.4MB in 20 files
 - Python 3.9.5 with sorting: 11s, without sorting 10s
 - Go 1.16.3 with sorting: 30s, without sorting: 20s
 - Rust 1.51.0 with sorting: 1m31s, without sorting: 1m10s
-- Crystal with sorting: 2m55s, without sorting: 27s
+- Crystal 1.0.0 with sorting: 2m55s, without sorting: 27s
 
 macOS 11.3.1, MacBook Pro (Retina, 15-inch, Late 2013)
 
