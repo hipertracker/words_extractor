@@ -1,9 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
-	"os"
+	"io/ioutil"
 	"regexp"
 	"strconv"
 	"strings"
@@ -11,16 +10,15 @@ import (
 
 func getRows(metaPath string) ListOfStrings {
 	path := strings.Replace(metaPath, ".yml", ".txt", -1)
-	data, _ := os.Open(path)
-	defer data.Close()
-
-	scanner := bufio.NewScanner(data)
-	scanner.Split(bufio.ScanLines)
-	var txtlines []string
-	for scanner.Scan() {
-		txtlines = append(txtlines, scanner.Text())
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		panic(err)
 	}
-	return txtlines
+	rows := strings.Split(string(data), "\n")
+	if rows[len(rows)-1] == "" {
+		rows = rows[:len(rows)-1]
+	}
+	return rows
 }
 
 func (arr ListOfStrings) toString() string {
