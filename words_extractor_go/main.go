@@ -3,12 +3,28 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"sort"
+	"strings"
+	"time"
 
-	"github.com/tidwall/collate"
+	"github.com/jfcg/sorty"
+	"github.com/thoas/go-funk"
 )
 
+type resultsArray struct {
+	Results []string
+}
+
+var (
+	res resultsArray
+)
+
+func timeTrack(start time.Time) {
+	fmt.Println("Total timing: ", time.Since(start))
+}
+
 func main() {
+	t1 := time.Now()
+	defer timeTrack(t1)
 	folder := "./words"
 	prepareFolder(folder, "*.txt")
 
@@ -17,34 +33,13 @@ func main() {
 		filename := "słowa - " + meta.Label + ".txt"
 		fmt.Println("Parsing...", filename)
 
-		// set: extracted unique words normalized to lowercase
-		set := make(map[string]void)
-		extractWords(getRows(path).toString(), set)
-		delete(set, "")
+		res.extractWords(getRows(path).toString())
+		res.Results = funk.UniqString(res.Results)
+		sorty.SortS(res.Results)
+		data := strings.Join(res.Results, "\n")
 
-		// convert map[string]void to []string
-		var words []string
-		for word := range set {
-			words = append(words, word)
-		}
-
-		// sortArray(words, "POLISH_CI")
-
-		var data []byte
-		for _, word := range words {
-			bytes := []byte(word + "\n")
-			data = append(data, bytes...)
-		}
-
-		for err := ioutil.WriteFile(folder+"/"+filename, data, 0644); err != nil; {
+		for err := ioutil.WriteFile(folder+"/"+filename, []byte(data), 0644); err != nil; {
 			panic(err)
 		}
 	}
-}
-
-func sortArray(arr []string, lang string) {
-	less := collate.IndexString(lang)
-	sort.SliceStable(arr, func(i, j int) bool {
-		return less(arr[i], arr[j])
-	})
 }

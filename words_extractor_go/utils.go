@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 )
 
@@ -26,10 +25,19 @@ func getYamlFilepaths(root string) []string {
 	return result
 }
 
-func extractWords(s string, set map[string]void) {
-	re := regexp.MustCompile("[^\\p{L}]+")
-	for _, word := range re.Split(s, -1) {
-		set[strings.ToLower(word)] = member
+func removeCharacters(input string, characters string) string {
+	filter := func(r rune) rune {
+		if strings.IndexRune(characters, r) < 0 {
+			return r
+		}
+		return -1
+	}
+	return strings.Map(filter, input)
+}
+
+func (r *resultsArray) extractWords(s string) {
+	for _, word := range strings.Fields(s) {
+		r.Results = append(r.Results, strings.ToLower(removeCharacters(word, ".:,;()!?'-_")))
 	}
 }
 
