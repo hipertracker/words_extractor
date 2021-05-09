@@ -4,6 +4,9 @@ import os
 import re
 import yaml
 import shutil
+import time
+
+t = time.time()
 
 with_sorting = False
 
@@ -25,3 +28,5 @@ for path in glob.glob("../data/pl/**/*.yml", recursive=True):
         if with_sorting:
             words = sorted(words, key=collator.getSortKey)
         file.write("\n".join(words))
+
+print("Total timing: ", time.time() - t)

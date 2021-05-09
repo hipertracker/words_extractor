@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
@@ -18,16 +19,16 @@ func main() {
 	t := time.Now()
 	defer timeTrack(t)
 
-	outdir := "./words"
+	outdir := "words"
 	os.RemoveAll(outdir)
 	os.Mkdir(outdir, 0777)
 
 	paths, _ := doublestar.Glob("../data/pl/**/*.yml")
 	for _, path := range paths {
-		yaml := GetYAML(path)
-		outfilepath := fmt.Sprintf("%s/words-for-%s.txt", outdir, yaml.Label)
-		fmt.Printf("Processing %s ...\n", outfilepath)
-
+		fmt.Println(filepath.Base(path))
+		meta := GetYAML(path)
+		outfilepath := fmt.Sprintf("%s/extracted-words-for-%s.txt", outdir, meta.Code)
+		
 		// load file content
 		filepath := strings.Replace(path, ".yml", ".txt", -1)
 		content, _ := ioutil.ReadFile(filepath)
