@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/bmatcuk/doublestar/v2"
 	"github.com/thoas/go-funk"
@@ -14,6 +15,9 @@ import (
 )
 
 func main() {
+	t := time.Now()
+	defer timeTrack(t)
+
 	outdir := "./words"
 	os.RemoveAll(outdir)
 	os.Mkdir(outdir, 0777)
@@ -37,6 +41,11 @@ func main() {
 			panic(err)
 		}
 	}
+
+}
+
+func timeTrack(start time.Time) {
+	fmt.Println("Total timing: ", time.Since(start))
 }
 
 func extractUniqueWords(content []byte) []string {
