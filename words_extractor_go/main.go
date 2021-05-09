@@ -48,7 +48,6 @@ func extractUniqueWords(content []byte) []string {
 
 func sortWords(words []string, lang string) []string {
 	less := collate.IndexString(lang)
-	// sorty.Sort(words, less)
 	sort.SliceStable(words, func(i, j int) bool {
 		return less(words[i], words[j])
 	})
