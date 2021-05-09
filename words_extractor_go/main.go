@@ -3,48 +3,56 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
+	"regexp"
 	"sort"
+	"strings"
 
+	"github.com/bmatcuk/doublestar/v2"
+	"github.com/thoas/go-funk"
 	"github.com/tidwall/collate"
 )
 
 func main() {
-	folder := "./words"
-	prepareFolder(folder, "*.txt")
+	outdir := "./words"
+	os.RemoveAll(outdir)
+	os.Mkdir(outdir, 0777)
 
-	for _, path := range getYamlFilepaths("../data/pl/") {
-		meta := getMeta(path)
-		filename := "słowa - " + meta.Label + ".txt"
-		fmt.Println("Parsing...", filename)
+	paths, _ := doublestar.Glob("../data/pl/**/*.yml")
+	for _, path := range paths {
+		yaml := GetYAML(path)
+		outfilepath := fmt.Sprintf("%s/words-for-%s.txt", outdir, yaml.Label)
+		fmt.Printf("Processing %s ...\n", outfilepath)
 
-		// set: extracted unique words normalized to lowercase
-		set := make(map[string]void)
-		extractWords(getRows(path).toString(), set)
-		delete(set, "")
+		// load file content
+		filepath := strings.Replace(path, ".yml", ".txt", -1)
+		content, _ := ioutil.ReadFile(filepath)
 
-		// convert map[string]void to []string
-		var words []string
-		for word := range set {
-			words = append(words, word)
-		}
+		// extract and sort unique words
+		words := extractUniqueWords(content)
+		words = sortWords(words, "POLISH_CI") // ~19s, without: 11s
 
-		sortArray(words, "POLISH_CI")
+		text := strings.Join(words, "\n")
 
-		var data []byte
-		for _, word := range words {
-			bytes := []byte(word + "\n")
-			data = append(data, bytes...)
-		}
-
-		for err := ioutil.WriteFile(folder+"/"+filename, data, 0644); err != nil; {
+		PrettyPrint(outfilepath)
+		for err := ioutil.WriteFile(outfilepath, []byte(text), 0644); err != nil; {
 			panic(err)
 		}
 	}
 }
 
-func sortArray(arr []string, lang string) {
+func extractUniqueWords(content []byte) []string {
+	text := strings.ToLower(string(content))
+	re := regexp.MustCompile(`[^\p{L}]+`)
+	tokens := re.Split(text, -1)
+	return funk.UniqString(tokens)
+}
+
+func sortWords(words []string, lang string) []string {
 	less := collate.IndexString(lang)
-	sort.SliceStable(arr, func(i, j int) bool {
-		return less(arr[i], arr[j])
+	// sorty.Sort(words, less)
+	sort.SliceStable(words, func(i, j int) bool {
+		return less(words[i], words[j])
 	})
+	return words
 }
