@@ -33,8 +33,6 @@ func main() {
 		words = sortWords(words, "POLISH_CI") // ~19s, without: 11s
 
 		text := strings.Join(words, "\n")
-
-		PrettyPrint(outfilepath)
 		for err := ioutil.WriteFile(outfilepath, []byte(text), 0644); err != nil; {
 			panic(err)
 		}
