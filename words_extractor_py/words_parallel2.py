@@ -35,18 +35,14 @@ if __name__ == "__main__":
     pool = mp.Pool(mp.cpu_count())
 
     print("Processing")
-    results = []
+
+    jobs = []
     for path in glob.glob("../data/pl/**/*.yml", recursive=True):
-        res = pool.apply_async(
-            worker,
-            kwds=dict(
-                path=path,
-                outdir=outdir,
-                with_sorting=True,
-            ),
-        )
-        results.append(res)
-    for res in results:
-        print("Saved: ", res.get())
+        process = mp.Process(target=worker, args=(path, outdir))
+        jobs.append(process)
+    for job in jobs:
+        job.start()
+    for job in jobs:
+        job.join()
 
     print("Total timing: ", time.time() - t)
