@@ -29,7 +29,7 @@ if __name__ == "__main__":
         shutil.rmtree(outdir)
     os.makedirs(outdir)
 
-    collator = (Collator.createInstance(Locale("pl_PL.UTF-8")),)
+    collator = Collator.createInstance(Locale("pl_PL.UTF-8"))
     separator = re.compile("[\W\d]+")
     for path in glob.glob("../data/pl/**/*.yml", recursive=True):
         worker(
