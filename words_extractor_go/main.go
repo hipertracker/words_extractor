@@ -53,7 +53,7 @@ func worker(id int, wg *sync.WaitGroup, path, outdir string, verbose bool) {
 
 	// extract and sort unique words
 	words := extractUniqueWords(content)
-  // words = sortWords(words, "POLISH_CI")
+	words = sortWords(words, "POLISH_CI")
 
 	text := strings.Join(words, "\n")
 	for err := ioutil.WriteFile(outfilepath, []byte(text), 0644); err != nil; {
