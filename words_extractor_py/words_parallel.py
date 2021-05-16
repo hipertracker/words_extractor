@@ -1,5 +1,6 @@
 import glob
 from icu import Collator, Locale
+import multiprocessing as mp
 import os
 import re
 import shutil
@@ -7,9 +8,10 @@ import time
 import yaml
 
 
-def worker(path, collator, separator, outdir, with_sorting):
+def worker(path, outdir, with_sorting):
+    collator = Collator.createInstance(Locale("pl_PL.UTF-8"))
+    separator = re.compile("[\W\d]+")
     filepath = path.replace(".yml", ".txt")
-    print(f"Processing {filepath}")
     with open(filepath) as file:
         text = file.read().lower().rstrip()
         words = set(re.split(separator, text))
@@ -19,6 +21,7 @@ def worker(path, collator, separator, outdir, with_sorting):
         if with_sorting:
             words = sorted(words, key=collator.getSortKey)
         file.write("\n".join(words))
+    return path
 
 
 if __name__ == "__main__":
@@ -29,15 +32,21 @@ if __name__ == "__main__":
         shutil.rmtree(outdir)
     os.makedirs(outdir)
 
-    collator = (Collator.createInstance(Locale("pl_PL.UTF-8")),)
-    separator = re.compile("[\W\d]+")
+    pool = mp.Pool(mp.cpu_count())
+
+    print("Processing")
+    results = []
     for path in glob.glob("../data/pl/**/*.yml", recursive=True):
-        worker(
-            path=path,
-            collator=collator,
-            separator=separator,
-            outdir=outdir,
-            with_sorting=True,
+        res = pool.apply_async(
+            worker,
+            kwds=dict(
+                path=path,
+                outdir=outdir,
+                with_sorting=False,
+            ),
         )
+        results.append(res)
+    for res in results:
+        print("Saved: ", res.get())
 
     print("Total timing: ", time.time() - t)
