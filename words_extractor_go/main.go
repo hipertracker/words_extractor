@@ -25,6 +25,8 @@ func main() {
 	os.RemoveAll(outdir)
 	os.Mkdir(outdir, 0777)
 
+	fmt.Println("Parsing...")
+
 	paths, _ := doublestar.Glob("../data/pl/**/*.yml")
 	for i, path := range paths {
 		wg.Add(1)
@@ -35,11 +37,6 @@ func main() {
 
 func worker(id int, wg *sync.WaitGroup, path, outdir string, verbose bool) {
 	defer wg.Done()
-
-	if verbose {
-		fmt.Println("Parsing ", path)
-	}
-
 	// load YAML file
 	meta := GetYAML(path)
 	outfilepath := fmt.Sprintf("%s/extracted-words-for-%s.txt", outdir, meta.Code)

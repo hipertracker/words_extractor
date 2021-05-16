@@ -5,9 +5,9 @@ Example of words extracting in Go, Crystal, Rust and Python
 Text source: 79.4MB in 30 files
 
 - Python 3.9.5 (parallel) with sorting: 4.01s, without sorting: 2.47
-- Go 1.16.3 (parallel) with sorting: 7.55s, without sorting: 4.06s
+- Go 1.16.4 (parallel) with sorting: 7.32s, without sorting: 4.06s
 - Python 3.9.5 with sorting: 10s, without sorting 8.32s
-- Go 1.16.3 with sorting: 21s, without sorting: 11s
+- Go 1.16.4 with sorting: 21s, without sorting: 11s
 - Rust 1.51.0 with sorting: 1m31s, without sorting: 1m10s
 - Crystal 1.0.0 with sorting: 2m55s, without sorting: 27s
 
