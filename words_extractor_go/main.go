@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/bmatcuk/doublestar/v2"
@@ -16,6 +16,8 @@ import (
 )
 
 func main() {
+	var wg sync.WaitGroup
+
 	t := time.Now()
 	defer timeTrack(t)
 
@@ -24,25 +26,42 @@ func main() {
 	os.Mkdir(outdir, 0777)
 
 	paths, _ := doublestar.Glob("../data/pl/**/*.yml")
-	for _, path := range paths {
-		fmt.Println(filepath.Base(path))
-		meta := GetYAML(path)
-		outfilepath := fmt.Sprintf("%s/extracted-words-for-%s.txt", outdir, meta.Code)
-		
-		// load file content
-		filepath := strings.Replace(path, ".yml", ".txt", -1)
-		content, _ := ioutil.ReadFile(filepath)
+	for i, path := range paths {
+		wg.Add(1)
+		go worker(i, &wg, path, outdir, true)
+	}
+	wg.Wait()
+}
 
-		// extract and sort unique words
-		words := extractUniqueWords(content)
-		words = sortWords(words, "POLISH_CI")
+func worker(id int, wg *sync.WaitGroup, path, outdir string, verbose bool) {
+	defer wg.Done()
 
-		text := strings.Join(words, "\n")
-		for err := ioutil.WriteFile(outfilepath, []byte(text), 0644); err != nil; {
-			panic(err)
-		}
+	if verbose {
+		fmt.Println("Parsing ", path)
 	}
 
+	// load YAML file
+	meta := GetYAML(path)
+	outfilepath := fmt.Sprintf("%s/extracted-words-for-%s.txt", outdir, meta.Code)
+
+	// load text file
+	filepath := strings.Replace(path, ".yml", ".txt", -1)
+	content, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		panic(err)
+	}
+
+	// extract and sort unique words
+	words := extractUniqueWords(content)
+  // words = sortWords(words, "POLISH_CI")
+
+	text := strings.Join(words, "\n")
+	for err := ioutil.WriteFile(outfilepath, []byte(text), 0644); err != nil; {
+		panic(err)
+	}
+	if verbose {
+		fmt.Println("Saved ", path)
+	}
 }
 
 func timeTrack(start time.Time) {
