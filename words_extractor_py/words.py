@@ -31,6 +31,7 @@ if __name__ == "__main__":
 
     collator = Collator.createInstance(Locale("pl_PL.UTF-8"))
     separator = re.compile("[\W\d]+")
+    print("Processing")
     for path in glob.glob("../data/pl/**/*.yml", recursive=True):
         worker(
             path=path,
