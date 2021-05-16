@@ -42,7 +42,7 @@ if __name__ == "__main__":
             kwds=dict(
                 path=path,
                 outdir=outdir,
-                with_sorting=False,
+                with_sorting=True,
             ),
         )
         results.append(res)

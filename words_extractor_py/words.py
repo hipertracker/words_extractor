@@ -9,7 +9,6 @@ import yaml
 
 def worker(path, collator, separator, outdir, with_sorting):
     filepath = path.replace(".yml", ".txt")
-    print(f"Processing {filepath}")
     with open(filepath) as file:
         text = file.read().lower().rstrip()
         words = set(re.split(separator, text))
@@ -19,6 +18,7 @@ def worker(path, collator, separator, outdir, with_sorting):
         if with_sorting:
             words = sorted(words, key=collator.getSortKey)
         file.write("\n".join(words))
+    print(f"Saved: ", filepath)
 
 
 if __name__ == "__main__":
