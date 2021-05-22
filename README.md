@@ -1,6 +1,6 @@
 # words_extractor
 
-Example of words extracting in Go, Crystal, Rust and Python
+Example of text file parsing in Python, Golang, Elixir, Rust and Crystal
 
 Text source: 79.4MB in 30 files
 
