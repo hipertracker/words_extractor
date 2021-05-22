@@ -28,7 +28,7 @@ cd words_extractor_cr
 crystal run src/fast_words_cr.cr
 
 cd words_extractor_ex
-mix run "WordExtractor.run"
+mix run "WordsExtractor.run"
 ```
 
 ## Running Python
