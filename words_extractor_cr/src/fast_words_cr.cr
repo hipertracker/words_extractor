@@ -9,13 +9,29 @@ module FastWordsCr
 
   def self.main(outpath = "words")
     with_sorting = true
+    concurrent = true
+
     prepare_folder(outpath, "*.txt")
+
+    file_count = 0
+
+    processed_files = Channel(Bool).new
     Dir.glob("../data/pl/**/*.yml").each do |path|
-      # spawn do
+      if concurrent
+        spawn do
+          worker(path, outpath, with_sorting)
+          processed_files.send true
+        end
+        file_count += 1
+      else
         worker(path, outpath, with_sorting)
-      # end
+      end
     end
-    # Fiber.yield
+    if concurrent
+      file_count.times do
+        processed_files.receive
+      end
+    end
   end
 
   def self.worker(path, outpath, with_sorting)
@@ -24,7 +40,7 @@ module FastWordsCr
     words = text.split(/[^\p{L}]+/).to_set
 
     if with_sorting
-      words = words.to_a.sort {|x, y| self.word_cmp(x, y)}
+      words = words.to_a.sort { |x, y| self.word_cmp(x, y) }
     end
 
     meta = File.open(path) { |file| YAML.parse(file) }
