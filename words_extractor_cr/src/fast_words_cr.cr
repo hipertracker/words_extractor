@@ -19,17 +19,17 @@ module FastWordsCr
   def self.worker(path, outpath)
     text = File.read(path.gsub(".yml", ".txt")).gsub("\n", " ").downcase
 
-    # 35sec
-    # words_json = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_json.downcase
-    # words = Array(String).from_json(words_json).sort { |x, y| self.word_cmp(x, y) }
+    # 17sec
+    words_json = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_json.downcase
+    words = Array(String).from_json(words_json).sort { |x, y| self.word_cmp(x, y) }
 
-    # 35s
+    # 19s
     # words = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_a.sort do |x, y|
     #   self.word_cmp(x, y)
     # end
 
     # 7s (no sort)
-    words = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_a
+    # words = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_a
 
     meta = File.open(path) { |file| YAML.parse(file) }
     filepath = %Q(#{outpath}/słowa - #{meta["label"]}.txt)
@@ -45,8 +45,8 @@ module FastWordsCr
   end
 
   def self.word_cmp(str1 : String, str2 : String, charset = "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż")
-    tokens1 = str1.downcase.split("")
-    tokens2 = str2.downcase.split("")
+    tokens1 = str1.downcase.chars
+    tokens2 = str2.downcase.chars
     tokens1.each_with_index do |s1, i|
       return 1 unless tokens2[i]?
       idx1 = charset.index(s1) || -1

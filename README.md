@@ -8,8 +8,8 @@ Text source: 79.4MB in 30 files
 - Rust 1.51.0 with sorting: 7s, without sorting: 5s (no parallelism)
 - Go 1.16.4 (parallel) with sorting: 7.32s, without sorting: 4.06s
 - Python 3.9.5 with sorting: 10s, without sorting 8.32s (no multiprocessing)
+- Crystal 1.0.0 with sorting: 17s, without sorting: 7s (non optimized sort, no parallelism)
 - Go 1.16.4 with sorting: 21s, without sorting: 11s (no parallelism)
-- Crystal 1.0.0 with sorting: 35s, without sorting: 7s (non optimized sort, no parallelism)
 - Elixir 1.12 (parallel) with sorting: 33s (without release build)
 
 
