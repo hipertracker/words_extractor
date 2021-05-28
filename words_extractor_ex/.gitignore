@@ -27,3 +27,4 @@ words_extractor_ex-*.tar
 /.elixir_ls/
 /.history/
 /.ipynb_checkpoints/
+/words/
