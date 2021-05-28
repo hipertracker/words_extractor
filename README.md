@@ -5,12 +5,13 @@ Example of text file parsing in Python, Golang, Elixir, Rust and Crystal
 Text source: 79.4MB in 30 files
 
 - Python 3.9.5 (parallel) with sorting: 3.42s, without sorting: 2.47
+- Rust 1.51.0 with sorting: 7s, without sorting: 5s (no parallelism)
 - Go 1.16.4 (parallel) with sorting: 7.32s, without sorting: 4.06s
-- Python 3.9.5 with sorting: 10s, without sorting 8.32s
-- Go 1.16.4 with sorting: 21s, without sorting: 11s
-- Elixir 1.12 (parallel) with sorting: 33s
-- Rust 1.51.0 with sorting: 1m31s, without sorting: 1m10s
-- Crystal 1.0.0 with sorting: 2m55s, without sorting: 27s
+- Python 3.9.5 with sorting: 10s, without sorting 8.32s (no multiprocessing)
+- Go 1.16.4 with sorting: 21s, without sorting: 11s (no parallelism)
+- Crystal 1.0.0 with sorting: 35s, without sorting: 7s (non optimized sort, no parallelism)
+- Elixir 1.12 (parallel) with sorting: 33s (without release build)
+
 
 macOS 11.3.1, MacBook Pro (Retina, 15-inch, Late 2013)
 
@@ -19,13 +20,16 @@ cd words_extractor_py
 python words.py
 
 cd words_extractor_rs
-cargo run
+cargo build --release
+target/release/words_extractor_rs
 
 cd words_extractor_go
-make run
+make build
+./main
 
 cd words_extractor_cr
-crystal run src/fast_words_cr.cr
+crystal build --release src/fast_words_cr.cr -o main
+./main
 
 cd words_extractor_ex
 mix run "WordsExtractor.run"

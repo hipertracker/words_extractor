@@ -9,25 +9,32 @@ module FastWordsCr
   def self.main(outpath = "words")
     prepare_folder(outpath, "*.txt")
     Dir.glob("../data/pl/**/*.yml").each do |path|
-      text = File.read(path.gsub(".yml", ".txt")).gsub("\n", " ").downcase
-
-      # 2m13s or 2m58 with verbose .downcase in self.word_cmp
-      words_json = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_json.downcase
-      words = Array(String).from_json(words_json).sort { |x, y| self.word_cmp(x, y) }
-
-      # 3m8s
-      # words = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_a.sort do |x, y|
-      #   self.word_cmp(x, y)
+      # spawn do
+        worker(path, outpath)
       # end
-
-      # 27s (no sort)
-      # words = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_a
-
-      meta = File.open(path) { |file| YAML.parse(file) }
-      filepath = %Q(#{outpath}/słowa - #{meta["label"]}.txt)
-      puts filepath
-      File.write(filepath, words.join("\n"))
     end
+    # Fiber.yield
+  end
+
+  def self.worker(path, outpath)
+    text = File.read(path.gsub(".yml", ".txt")).gsub("\n", " ").downcase
+
+    # 35sec
+    # words_json = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_json.downcase
+    # words = Array(String).from_json(words_json).sort { |x, y| self.word_cmp(x, y) }
+
+    # 35s
+    # words = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_a.sort do |x, y|
+    #   self.word_cmp(x, y)
+    # end
+
+    # 7s (no sort)
+    words = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_a
+
+    meta = File.open(path) { |file| YAML.parse(file) }
+    filepath = %Q(#{outpath}/słowa - #{meta["label"]}.txt)
+    puts filepath
+    File.write(filepath, words.join("\n"))
   end
 
   def self.prepare_folder(folder : String, pattern : String)

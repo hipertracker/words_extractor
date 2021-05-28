@@ -6,7 +6,7 @@ use std::fs;
 use yaml_rust::YamlLoader;
 
 fn main() -> std::io::Result<()> {
-    let with_sorting = true;
+    let with_sorting = false;
 
     let outdir = "words";
     // let separator = Regex::new(r"[^\p{L}]+").unwrap();

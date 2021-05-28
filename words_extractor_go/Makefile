@@ -1,9 +1,9 @@
-BINARY_NAME=sort-me-out
+BINARY_NAME=main
 
 all: clean test build
 
 build:
-	@go build -o ${BINARY_NAME} *.go
+	@go build -o ${BINARY_NAME} -ldflags "-s -w" *.go
 
 run: build
 	./${BINARY_NAME}
