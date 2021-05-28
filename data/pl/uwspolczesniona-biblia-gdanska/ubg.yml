@@ -1,0 +1,30 @@
+available: true
+lang: pl
+code: ubg
+label: Uspółcześniona Biblia Gdańska
+year: "2017"
+tags:
+- modern
+- protestant
+- evangelical
+info:
+  publisher: Fundacja Wrota Nadziei (http://www.wrotanadziei.org)
+  copyright: "Copyright Information
+   © 2017 Gate of Hope Foundation
+   The publisher authorizes all copying and distribution of this work both in part and in its entirety, under the condition that it is done completely free of charge and that the content remains completely unchanged. Distribution for commercial purposes requires written permission from the Foundation.
+
+   Gate of Hope Foundation
+   ul. Armii Ludowej 71b lok. 26
+   87-100 Toruń, Polska
+   www.wrotanadziei.org
+
+   © 2017 Fundacja Wrota Nadziei
+   Wydawca wyraża zgodę na kopiowanie i rozpowszechnianie całości lub części publikacji, jednak bez czerpania z tego korzyści finansowych i bez wprowadzania jakichkolwiek zmian. Powielanie do celów komercyjnych wymaga pisemnej zgody Fundacji.
+
+   Fundacja Wrota Nadziei
+   ul. Armii Ludowej 71b lok. 26
+   87-100 Toruń, Polska
+   www.wrotanadziei.org"
+
+  notes: "Bible Works 9 ma gorszą wersję. Act 4:12; 1Th 4:13; 3Jo 1:14. Wcześniejszy skrót: bug. Z kolei http://chomikuj.pl/Biblia_mobile ma znaki unikodowe i błędne cyfry na końcu niektórych wersetów, oraz czasem źle przeparsowane wersety, jak 1Jo 1:14 który zawiera w sobie werset 15."
+  licence: https://thebible.org/gt/notices/pubg.html
