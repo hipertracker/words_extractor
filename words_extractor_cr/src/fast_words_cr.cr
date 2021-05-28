@@ -5,36 +5,32 @@ require "yaml"
 
 module FastWordsCr
   VERSION = "0.1.0"
+  CHARSET = "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż"
 
   def self.main(outpath = "words")
+    with_sorting = true
     prepare_folder(outpath, "*.txt")
     Dir.glob("../data/pl/**/*.yml").each do |path|
       # spawn do
-        worker(path, outpath)
+        worker(path, outpath, with_sorting)
       # end
     end
     # Fiber.yield
   end
 
-  def self.worker(path, outpath)
+  def self.worker(path, outpath, with_sorting)
     text = File.read(path.gsub(".yml", ".txt")).gsub("\n", " ").downcase
 
-    # 17sec
-    words_json = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_json.downcase
-    words = Array(String).from_json(words_json).sort { |x, y| self.word_cmp(x, y) }
+    words = text.split(/[^\p{L}]+/).to_set
 
-    # 19s
-    # words = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_a.sort do |x, y|
-    #   self.word_cmp(x, y)
-    # end
-
-    # 7s (no sort)
-    # words = (text.split(/[^\p{L}]+/).to_set - Set{""}).to_a
+    if with_sorting
+      words = words.to_a.sort {|x, y| self.word_cmp(x, y)}
+    end
 
     meta = File.open(path) { |file| YAML.parse(file) }
-    filepath = %Q(#{outpath}/słowa - #{meta["label"]}.txt)
-    puts filepath
+    filepath = %Q(#{outpath}/extracted-words-for-#{meta["label"]}.txt)
     File.write(filepath, words.join("\n"))
+    puts "Saved #{filepath}"
   end
 
   def self.prepare_folder(folder : String, pattern : String)
@@ -44,13 +40,12 @@ module FastWordsCr
     end
   end
 
-  def self.word_cmp(str1 : String, str2 : String, charset = "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż")
-    tokens1 = str1.downcase.chars
-    tokens2 = str2.downcase.chars
-    tokens1.each_with_index do |s1, i|
+  def self.word_cmp(str1 : String, str2 : String)
+    tokens2 = str2.chars
+    str1.chars.each_with_index do |s1, i|
       return 1 unless tokens2[i]?
-      idx1 = charset.index(s1) || -1
-      idx2 = charset.index(tokens2[i]) || -1
+      idx1 = CHARSET.index(s1) || -1
+      idx2 = CHARSET.index(tokens2[i]) || -1
       return 1 if idx1 > idx2
       return -1 if idx1 < idx2
     end
