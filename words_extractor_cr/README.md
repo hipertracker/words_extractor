@@ -8,8 +8,15 @@ TODO: Write installation instructions here
 
 ## Usage
 
-TODO: Write usage instructions here
+Build an optimized code with MT support
+```
+crystal build --release -Dpreview_mt src/fast_words_cr.cr -o main
+```
 
+Run on 8 CPU cores:
+```
+CRYSTAL_WORKES=8 ./main
+```
 ## Development
 
 TODO: Write development instructions here

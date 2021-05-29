@@ -4,7 +4,7 @@ require "yaml"
 # TODO: Write documentation for `FastWordsCr`
 
 module FastWordsCr
-  VERSION = "0.1.0"
+  VERSION = "0.2.0"
   CHARSET = "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż"
 
   def self.main(outpath = "words")
@@ -69,4 +69,7 @@ module FastWordsCr
   end
 end
 
-FastWordsCr.main
+elapsed_time = Time.measure do
+  FastWordsCr.main
+end
+puts elapsed_time
