@@ -1,15 +1,14 @@
 module words_extractor_jl
 
 using Distributed
-using Pipe
 using YAML
 
-folder = "words"
+const folder = "words"
 
-function worker(yaml_path) 
-    path = get_filepath(yaml_path)      
+function worker(yaml_path)
+    path = get_filepath(yaml_path)
     words = get_words(yaml_path)
-    write(path, join(words, "\n")) 
+    write(path, join(words, "\n"))
     println(string("Saved...", path))
 end
 
@@ -29,7 +28,7 @@ function walk(path, file_ext)
     for (root, _, files) in walkdir(path, topdown = true)
         for file in files
             if endswith(file, file_ext)
-                filepath = joinpath(root, file)                    
+                filepath = joinpath(root, file)
                 push!(res, filepath)
             end
         end
