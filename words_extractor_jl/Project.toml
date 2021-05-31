@@ -1,0 +1,10 @@
+name = "words_extractor_jl"
+uuid = "ab5e5b3c-2775-42ba-a2f5-dc8ee1810597"
+authors = ["Jaroslaw Zabiello <hipertracker@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
+IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
+JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
+YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
