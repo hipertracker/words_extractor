@@ -30,10 +30,10 @@ Rust
 cd words_extractor_rs
 cargo build --release
 target/release/words_extractor_rs
-
-Golang
 ```
+Golang
 
+```
 cd words_extractor_go
 make build
 GOGC=2000 ./main
