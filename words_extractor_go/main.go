@@ -15,8 +15,14 @@ import (
 	"github.com/tidwall/collate"
 )
 
+type Pair struct {
+	Path string
+	Size int64
+}
+
 func main() {
-	var wg sync.WaitGroup
+	// var wg sync.WaitGroup
+	queue := make(chan Pair)
 
 	t := time.Now()
 	defer timeTrack(t)
@@ -27,12 +33,43 @@ func main() {
 
 	fmt.Println("Parsing...")
 
-	paths, _ := doublestar.Glob("../data/pl/**/*.yml")
+	paths, _ := doublestar.Glob("../data/**/*.yml")
+
+	total_size := int64(0)
+	items_count := len(paths)
 	for i, path := range paths {
-		wg.Add(1)
-		go worker(i, &wg, path, outdir, true)
+		go processFile(queue, outdir, path, false)
+		res := <-queue
+		total_size += res.Size
+		fmt.Printf("[%d/%d] %s\n", i+1, items_count, res.Path)
 	}
-	wg.Wait()
+	fmt.Printf("Total items: %d\n", items_count)
+	fmt.Printf("Total size: %d MB\n", total_size/(1024*1024))
+}
+
+func processFile(queue chan Pair, outdir string, path string, sorting bool) {
+	meta := GetYAML(path)
+	// load text file
+	filepath := strings.Replace(path, ".yml", ".txt", -1)
+	info, err := os.Stat(filepath)
+	if err != nil {
+		panic(err)
+	}
+	content, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		panic(err)
+	}
+	// extract and sort unique words
+	words := extractUniqueWords(content)
+	if sorting {
+		words = sortWords(words, "POLISH_CI")
+	}
+	text := strings.Join(words, "\n")
+	outpath := fmt.Sprintf("%s/%s-%s.txt", outdir, meta.Lang, meta.Code)
+	for err := ioutil.WriteFile(outpath, []byte(text), 0644); err != nil; {
+		panic(err)
+	}
+	queue <- Pair{path, info.Size()}
 }
 
 func worker(id int, wg *sync.WaitGroup, path, outdir string, verbose bool) {
