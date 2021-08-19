@@ -27,7 +27,6 @@ def worker(path: str, outdir: str, sorting: bool = False) -> Tuple[str, int]:
     filepath = path.replace(".yml", ".txt")
     filesize = os.path.getsize(filepath)
     with open(filepath) as file:
-
         text = file.read().lower().rstrip()
         words = set(re.split(separator, text))
     with open(path) as file:
@@ -67,7 +66,7 @@ if __name__ == "__main__":
         path, size = res.get()
         total_size += size
         print(f"[{i+1}/{items_count}] {path}")
-    print(f"Total files: {len(results)}")
+    print(f"Total files: {items_count}")
     print(f"Total size: {round((total_size / 1024 / 1024))} MB")
     t = time.time() - t
     print(f"Total time: {t:.4f} s")
