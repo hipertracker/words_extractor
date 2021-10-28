@@ -19,7 +19,3 @@ func Test_sortWords(t *testing.T) {
 	given := sortWords(words, "POLISH_CI")
 	assert.Equal(t, expected, given, "words should be sorted out using Polish grammar rules")
 }
-
-// Total items: 123
-// Total size: 503 MB`
-// Total timing:  36.606038042s`
