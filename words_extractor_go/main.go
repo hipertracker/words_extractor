@@ -20,8 +20,7 @@ type Pair struct {
 	Size int64
 }
 
-// var srcPath = "../data/**/*.yml"
-var srcPath = "./bibles/??/**/*.yml"
+var srcPath = "../data/**/*.yml"
 var outdir = "words"
 
 func main() {
