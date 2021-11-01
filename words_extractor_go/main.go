@@ -40,9 +40,8 @@ func without_channels() {
 	paths, _ := doublestar.Glob("../data/**/*.yml")
 
 	items_count := len(paths)
-
+        wg.Add(items_count)
 	for _, path := range paths {
-		wg.Add(1)
 		go processFile(&wg, outdir, path, false)
 	}
 	wg.Wait()
