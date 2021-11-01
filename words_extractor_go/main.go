@@ -22,7 +22,7 @@ type Pair struct {
 
 func main() {
 	with_channels()
-	without_channels()
+	without_channels() // 3x faster
 }
 
 func without_channels() {
@@ -40,9 +40,8 @@ func without_channels() {
 	paths, _ := doublestar.Glob("../data/**/*.yml")
 
 	items_count := len(paths)
-
+	wg.Add(items_count)
 	for _, path := range paths {
-		wg.Add(1)
 		go processFile(&wg, outdir, path, false)
 	}
 	wg.Wait()
@@ -52,7 +51,7 @@ func without_channels() {
 }
 
 func with_channels() {
-	queue := make(chan string)
+	queue := make(chan string, 8)
 
 	t := time.Now()
 	defer timeTrack(t)
