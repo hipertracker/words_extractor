@@ -1,4 +1,4 @@
-name = "words_extractor_jl"
+name = "words"
 uuid = "ab5e5b3c-2775-42ba-a2f5-dc8ee1810597"
 authors = ["Jaroslaw Zabiello <hipertracker@gmail.com>"]
 version = "0.1.0"

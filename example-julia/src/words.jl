@@ -9,7 +9,7 @@ function worker(yaml_path)
     path = get_filepath(yaml_path)
     words = get_words(yaml_path)
     write(path, join(words, "\n"))
-    println(string("Saved...", path))
+#     println(string("Saved...", path))
 end
 
 function get_words(yaml_path)
@@ -42,7 +42,7 @@ function main()
     end
     mkdir(folder)
     Threads.@threads for path in walk("../data/pl/", ".yml")
-        println("Spawn $path")
+#         println("Spawn $path")
         worker(path)
     end
 end
