@@ -1,3 +1,7 @@
+# Python
+
+## setup and run
+
 ```
 python -m venv .venv
 source .venv/bin/activat
