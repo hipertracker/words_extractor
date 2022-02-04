@@ -1,6 +1,10 @@
 /.history/
 /.vscode/
-/.DS_Store
+/**/.DS_Store
 
 /words_extractor_pypy/
 /.elixir_ls/
+/.idea/
+/old/
+/**/.mypy_cache
+/**/*.pyc

@@ -3,24 +3,26 @@ require "yaml"
 
 # TODO: Write documentation for `FastWordsCr`
 
-module FastWordsCr
+module Example::Crystal
   VERSION = "0.2.0"
   CHARSET = "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż"
 
   def self.main(outpath = "words")
-    with_sorting = true
+    with_sorting = false
     concurrent = true
 
     prepare_folder(outpath, "*.txt")
 
     file_count = 0
+    total_size = 0
 
-    processed_files = Channel(Bool).new
-    Dir.glob("../data/pl/**/*.yml").each do |path|
+    channel = Channel(Tuple(String, Int64)).new
+    srcPath = "../data/??/**/*.yml"
+    # srcPath = "./bibles/??/**/*.yml"
+    Dir.glob(srcPath, follow_symlinks: true).each do |path|
       if concurrent
         spawn do
-          worker(path, outpath, with_sorting)
-          processed_files.send true
+          channel.send worker(path, outpath, with_sorting)
         end
         file_count += 1
       else
@@ -28,14 +30,19 @@ module FastWordsCr
       end
     end
     if concurrent
-      file_count.times do
-        processed_files.receive
+      file_count.times do |i|
+        path, size = channel.receive
+        total_size += size
+        # puts("[#{i + 1}/#{file_count}] #{path}")
       end
     end
+    total_size = total_size / 1024 / 1024
+    puts("Total size: #{total_size} MB")
   end
 
   def self.worker(path, outpath, with_sorting)
-    text = File.read(path.gsub(".yml", ".txt")).gsub("\n", " ").downcase
+    filepath = path.gsub(".yml", ".txt")
+    text = File.read(filepath).gsub("\n", " ").downcase
 
     words = text.split(/[^\p{L}]+/).to_set
 
@@ -44,9 +51,11 @@ module FastWordsCr
     end
 
     meta = File.open(path) { |file| YAML.parse(file) }
-    filepath = %Q(#{outpath}/extracted-words-for-#{meta["label"]}.txt)
+    filepath = %Q(#{outpath}/#{meta["lang"]}-#{meta["code"]}.txt)
     File.write(filepath, words.join("\n"))
-    puts "Saved #{filepath}"
+    filesize = File.size(filepath)
+    puts([filepath, filesize])
+    {filepath, filesize}
   end
 
   def self.prepare_folder(folder : String, pattern : String)
@@ -70,6 +79,6 @@ module FastWordsCr
 end
 
 elapsed_time = Time.measure do
-  FastWordsCr.main
+  Example::Crystal.main
 end
 puts elapsed_time

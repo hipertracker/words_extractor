@@ -14,7 +14,9 @@ fn main() -> std::io::Result<()> {
     let outdir = "words";
     fs::create_dir_all(outdir)?;
     let wg = WaitGroup::new();
-    for entry in glob("../data/pl/**/*.yml").expect("Failed to read glob pattern") {
+    let path = "../data/??/**/*.yml";
+    // let path = "./bibles/??/**/*.yml";
+    for entry in glob(path).expect("Failed to read glob pattern") {
         match entry {
             Ok(path) => {
                 // let separator = Regex::new(r"[^\p{L}]+").unwrap();
@@ -57,3 +59,5 @@ fn main() -> std::io::Result<()> {
     println!("{:?} seconds.", start.to(end));
     Ok(())
 }
+
+//  2s

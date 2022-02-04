@@ -1,0 +1,12 @@
+
+source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
+ruby '3.1.0'
+
+gem 'rubocop', require: false
+gem 'parallel'
+# gem 'irbtools', require: 'irbtools/binding'
+gem 'pry'
+gem 'pry-doc'
+gem 'pry-gem', '~> 1.0'

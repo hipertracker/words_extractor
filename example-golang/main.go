@@ -16,21 +16,78 @@ import (
 )
 
 type Pair struct {
-	Path string
-	Size int64
+	SrcPath string
+	Dstpath string
 }
 
-var srcPath = "../data/**/*.yml"
+var srcPath = "../data/??/**/*.yml"
 var outdir = "words"
 
+var wg sync.WaitGroup
+
+// func mainOld() {
+// 	paths, _ := doublestar.Glob(srcPath)
+
+// 	clearResults()
+// 	runWithChannels(paths)
+
+// 	clearResults()
+// 	runWithWaitGroups(paths)
+// }
+
 func main() {
-	paths, _ := doublestar.Glob(srcPath)
+	var wg sync.WaitGroup
+	wg.Add(1)
 
-	clearResults()
-	runWithChannels(paths)
+	go func() {
+		defer wg.Done()
 
-	clearResults()
-	runWithWaitGroups(paths)
+		t := time.Now()
+		defer timeTrack(t)
+
+		paths, _ := doublestar.Glob(srcPath)
+
+		ch1 := make(chan Pair, len(paths))
+		ch2 := make(chan string, len(paths))
+
+		clearResults()
+
+		for _, yamlPath := range paths {
+			go loadYaml(ch1, yamlPath)
+		}
+
+		for range paths {
+			pair := <-ch1
+			go loadText(ch2, pair.SrcPath, pair.Dstpath, true)
+		}
+		for range paths {
+			fmt.Printf("Saved %s\n", <-ch2)
+		}
+	}()
+	wg.Wait()
+}
+
+func loadYaml(ch chan Pair, path string) {
+	meta := GetYAML(path)
+	srcPath := strings.Replace(path, ".yml", ".txt", -1)
+	dstPath := fmt.Sprintf("%s/extracted-words-for-%s.txt", outdir, meta.Code)
+	ch <- Pair{srcPath, dstPath}
+}
+
+func loadText(ch2 chan string, srcPath string, dstPath string, sorting bool) {
+	content, err := ioutil.ReadFile(srcPath)
+	if err != nil {
+		panic(err)
+	}
+	words := extractUniqueWords(content)
+	if sorting {
+		words = sortWords(words, "POLISH_CI")
+	}
+	text := strings.Join(words, "\n")
+	for err := ioutil.WriteFile(dstPath, []byte(text), 0644); err != nil; {
+		panic(err)
+	}
+	ch2 <- dstPath
 }
 
 func clearResults() {
@@ -40,10 +97,8 @@ func clearResults() {
 
 func runWithChannels(paths []string) {
 	var ch = make(chan string)
-
 	t := time.Now()
 	defer timeTrack(t)
-
 	for _, path := range paths {
 		go func(yamlPath string) {
 			ch <- parseFile(yamlPath, false)
