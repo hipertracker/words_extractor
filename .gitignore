@@ -6,3 +6,5 @@
 /.elixir_ls/
 /.idea/
 /old/
+/**/.mypy_cache
+/**/*.pyc
