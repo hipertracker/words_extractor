@@ -10,6 +10,4 @@ CRYSTAL_WORKERS=10 ./main
 MacOS 12.2
 Crystal 1.3.2
 MBP 16" M1Max 10 cores
-Total files: 123
-Total size: 504 MB
-Total time: 32.8809 s
+
