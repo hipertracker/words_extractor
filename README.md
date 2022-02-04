@@ -28,6 +28,7 @@ Total size: 2745 MB
 
 1. Rust:     7.5436 s
 2. Python:  15.3445 s
-3. Crystal: 32.3369 s
+3. Crystal: 26.3150 s
 4. Ruby:    40.9438 s
-5. Golang:  73.0321 s
+5. Golang:  1m13 s
+6. Elixir:  2m43 s
