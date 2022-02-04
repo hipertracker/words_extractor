@@ -26,9 +26,8 @@ For more files (just got into data/pl/* and clone files several times)
 Total files: 936
 Total size: 2745 MB
 
-Rust:     7.5436 s
-Python:  15.3445 s
-Crystal: 32.3369 s
-Ruby:    40.9438 s
-
-Golang panic: open ...copy 70/ubg.yml: too many open files
+1. Rust:     7.5436 s
+2. Python:  15.3445 s
+3. Crystal: 32.3369 s
+4. Ruby:    40.9438 s
+5. Golang:  73.0321 s
