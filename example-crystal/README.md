@@ -4,7 +4,7 @@
 
 ```
 crystal build --release -Dpreview_mt src/example-crystal.cr -o main
-CRYSTAL_WORKES=10 ./main
+CRYSTAL_WORKERS=10 ./main
 ```
 
 MacOS 12.2
