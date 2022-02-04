@@ -8,3 +8,7 @@
 /old/
 /**/.mypy_cache
 /**/*.pyc
+/**/words
+/**/main.dwarf
+/**/main
+/**/target

@@ -15,7 +15,6 @@ fn main() -> std::io::Result<()> {
     fs::create_dir_all(outdir)?;
     let wg = WaitGroup::new();
     let path = "../data/??/**/*.yml";
-    // let path = "./bibles/??/**/*.yml";
     for entry in glob(path).expect("Failed to read glob pattern") {
         match entry {
             Ok(path) => {
