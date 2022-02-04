@@ -20,3 +20,15 @@ Results:
 3. Python 3.10.2 with multiprocessing -> 2.9403 s
 4. Crystal 1.3.2 with channels ->  6.0035 s
 5. Go 1.18beta1 with waitgroup -> 7.2166 s
+
+For more files (just got into data/pl/* and clone files several times)
+
+Total files: 936
+Total size: 2745 MB
+
+Rust:     7.5436 s
+Python:  15.3445 s
+Crystal: 32.3369 s
+Ruby:    40.9438 s
+
+Golang panic: open ...copy 70/ubg.yml: too many open files
