@@ -21,6 +21,6 @@ The following results are for 936 files (2745 MB) on MacOS 12.2 and MacBook Pro 
 
 Rust is the fastest language beyond doubt.
 
-What is surprised is pretty poor Golang's performance on this task. Crystal is faster than Golang but in this task, it is still slower than Python which is also surprising. (Neither Golang nor Crystal is my main field of expertise so maybe there is some room for improvement. Although I showed this code to people and nobody so far could improve it in any significant way. But if I find a better implementation I will update this comparison.)
+What is surprised is pretty poor Golang's performance on this task. Crystal is faster than Golang but in this task it is still slower than Python which is also surprising. (Neither Golang nor Crystal is my main field of expertise so maybe there is some room for improvement. Although I showed this code to people and nobody so far could improve it in any significant way. But if I find a better implementation I will update this comparison.)
 
 The high Python performance is interesting. Although it is using a multiprocessing standard library for full CPU cores utilization this is still dynamic interpreted language after all, which is rather expected to be slower than statically typed languages. 
