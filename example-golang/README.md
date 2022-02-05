@@ -4,5 +4,5 @@
 
 ```
 make build
-GOGC=2000 ./main
+./main [-n=NUMBER_OF_WORKERS, integer] [-s] 
 ```
