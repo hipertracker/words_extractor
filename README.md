@@ -14,7 +14,7 @@ The following results are for 936 files (2745 MB) on MacOS 12.2 and MacBook Pro 
 4. Crystal v1.3.2    = 26.32s 
 5. Ruby v3.1.0       = 40.94s (with Parallel)
 6. Golang v1.18beta1 = 73.00s
-6. Elixir v1.13.2    = 2m43s 
+7. Elixir v1.13.2    = 2m43s 
 </pre>
 
 ### Conclusion
