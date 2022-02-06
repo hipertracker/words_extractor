@@ -1,6 +1,6 @@
-module github.com/hipertracker/word_extractor
+module wordextractor
 
-go 1.18
+go 1.17
 
 require (
 	github.com/bmatcuk/doublestar v1.3.4
