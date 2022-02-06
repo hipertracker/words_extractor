@@ -24,6 +24,18 @@ Golang 1.17.6    = UNDER REFACTORING, stay tuned
 
 ### Conclusion
 
-Rust is the fastest language beyond doubt.
+The difficulty in sorting words is due to the need to handle sorting rules according to the language. This is quite a complex problem that does not exist for the English language where the character set does not exceed the basic ASCII standard.
 
-The high Python performance is interesting. Although it is using a multiprocessing standard library for full CPU cores utilization this is still dynamic interpreted language after all, which is rather expected to be slower than statically typed languages.
+* Rust = I couldn't find collations for sort rules in other languages.
+
+* Julia = same as Rust
+
+* Elixir = same as Rust
+
+* Crystal = currently has Turkish-only collations. Probably because the language is young and does not have a large enough community or company behind it. The manual sorting was not perfect here, the algorithm needs to be improved.
+
+* Python = has a great implementation of ICU library but unfortunately, it is not still available for the arm64 / M1 platform hence I couldn't use it in this comparison.
+
+* Ruby = same as Python
+
+* Golang = has rules for many languages. You can see the influence of a large company and community which makes Golang a mature solution. Sorting slowed the whole task down significantly, but the result is correct (in this case I only checked the results for the Polish language)
