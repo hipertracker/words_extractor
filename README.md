@@ -14,8 +14,8 @@ The following results are for 123 unique utf-8 Bible text files in 23 languages 
 * Machine: MacBook Pro 16" 64GB 2TB M1Max 10 cores.
 
 <pre>
-1. Rust 1.58      = 0.38s (with sorting: )
-2. Golang 1.17.6  = 0.xxx  (with sorting: )
+1. Rust 1.58      = 0.38s (with sorting: 1.40s)
+2. Golang 1.17.6  = 0.61s (with sorting: 5.03s)
 3. Python 3.10.2  = 2.80s
 4. Julia 1.7.1    = 4.522
 5. Crystal 1.3.2  = 5.72s
@@ -46,3 +46,7 @@ Rust is the fastest language beyond doubt. The new optimized Golang code version
 
 
 * Golang = has rules for many languages. You can see the influence of a large company and community which makes Golang a mature solution. Sorting slowed the whole task down significantly, but the result is correct (in this case I only checked the results for the Polish language)
+
+### Kudos
+
+[@romanatnews](https://github.com/romanatnews) (Golang example refactoring)
