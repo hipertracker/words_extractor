@@ -3,6 +3,8 @@ use Timex
 defmodule WordsExtractor do
   @moduledoc nil
 
+  @pat Regex.compile!("[\W\d]+/u")
+
   def run do
     outdir = "words"
     File.rm_rf!(outdir)
@@ -31,7 +33,6 @@ defmodule WordsExtractor do
 
   def worker({path, i}, outdir, count) do
     %{"code" => code, "lang" => lang} = YamlElixir.read_from_file!(path)
-    pat = Regex.compile!("[\W\d]+/u")
 
     filepath = String.replace(path, ".yml", ".txt")
     %File.Stat{:size => filesize} = File.stat!(filepath)
@@ -40,7 +41,7 @@ defmodule WordsExtractor do
       File.read!(filepath)
       |> String.downcase()
       |> String.trim()
-      |> then(&Regex.split(pat, &1))
+      |> then(&Regex.split(@pat, &1))
       |> MapSet.new()
       |> Enum.join("\n")
 
