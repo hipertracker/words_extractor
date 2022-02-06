@@ -35,12 +35,12 @@ module Example::Crystal
         puts(::sprintf("[%3d/%d] %s", i + 1, file_count, path))
       end
     end
-    total_size = total_size / 1024 / 1024
-    puts("Total size: #{total_size} MB")
+    puts("Total size: #{(total_size / 1024 / 1024).round} MB")
   end
 
   def self.worker(path, outdir, with_sorting)
     filepath = path.gsub(".yml", ".txt")
+    filesize = File.size(filepath)
     text = File.read(filepath).gsub("\n", " ").downcase
 
     words = text.split(/[^\p{L}]+/).to_set
@@ -50,8 +50,8 @@ module Example::Crystal
     end
 
     meta = File.open(path) { |file| YAML.parse(file) }
-    filepath = %Q(#{outdir}/#{meta["lang"]}-#{meta["code"]}.txt)
-    File.write(filepath, words.join("\n"))
+    outfilepath = %Q(#{outdir}/#{meta["lang"]}-#{meta["code"]}.txt)
+    File.write(outfilepath, words.join("\n"))
     filesize = File.size(filepath)
     {filepath, filesize}
   end
@@ -76,7 +76,8 @@ module Example::Crystal
   end
 end
 
-elapsed_time = Time.measure do
+elapsed = Time.measure do
   Example::Crystal.main
 end
-puts elapsed_time
+
+puts("Total time: #{elapsed}")
