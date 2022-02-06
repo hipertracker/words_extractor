@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"sort"
+	"strings"
 	"sync"
 	"unicode"
 	"unicode/utf8"
@@ -17,7 +18,7 @@ import (
 
 const (
 	filePerm        = 0644
-	initialDictSize = 1e4
+	InitialDictSize = 10000
 )
 
 // splitWordsUnicode splits data into words, using Unicode Letter character class.
@@ -109,7 +110,7 @@ func extract(src, dst, lang string, sortResults bool, sem <-chan empty, wg *sync
 
 	// One of the possible optimisations here is to split file in chunks and process
 	// each chunk individually.
-	words, err := collectWords(fd, initialDictSize)
+	words, err := collectWords(fd, InitialDictSize)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, `extract: reading input "%s": %s`, src, err)
 		return
@@ -160,7 +161,7 @@ func collectWords(r io.Reader, sizeHint int) ([]string, error) {
 	words := make([]string, 0, sizeHint)
 
 	for scanner.Scan() {
-		word := scanner.Text()
+		word := strings.ToLower(scanner.Text())
 		hash := memHashString(word)
 		if _, ok := dict[hash]; ok {
 			continue // duplicate detected
@@ -197,9 +198,9 @@ func writeResults(w io.Writer, words []string) error {
 	return nil
 }
 
-func ExtractUniqueWords(content string, lang string) ([]string, error) {
+func ExtractUniqueWords(content string, lang string, sizeHint int) ([]string, error) {
 	r := strings.NewReader(content)
-	words, err := collectWords(r)
+	words, err := collectWords(r, sizeHint)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, `collectWords error: %s`, err)
 		return nil, err
