@@ -39,7 +39,7 @@ Rust is the fastest language beyond doubt. The new optimized Golang code version
 * Elixir = same as Python, no ICU for M1.
 
 
-* Julia = I couldn't find a good i18 library supporting many lamguages.
+* Julia = I couldn't find a good i18 library supporting many languages.
 
 
 * Crystal = currently supports only Turkish collations. Probably because the language is young and does not have a large enough community or company behind it.
