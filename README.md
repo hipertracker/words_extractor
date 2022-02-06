@@ -19,7 +19,7 @@ The following results are for 123 unique utf-8 Bible text files in 23 languages 
 5. Elixir 1.13.2  = 7.82s
 6. Ruby 3.1.0     = 8.31s
 
-Golang 1.17    = UNDER REFACTORING, stay tuned
+Golang 1.17.6    = UNDER REFACTORING, stay tuned
 </pre>
 
 ### Conclusion

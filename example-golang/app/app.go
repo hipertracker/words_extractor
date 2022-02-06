@@ -41,7 +41,7 @@ func Run(srcDir, outDir string, numWorkers int, sortResults bool) error {
 		}
 
 		src := file[:len(file)-3] + "txt"
-		dst := filepath.Join(outDir, "extracted-words-for-"+spec.Code+".txt")
+		dst := filepath.Join(outDir, spec.Lang+"-"+spec.Code+".txt")
 
 		wg.Add(1)
 		go extract(src, dst, "POLISH_CI", sortResults, sem, &wg)
