@@ -18,5 +18,5 @@ func Test_ExtractUniqueWords(t *testing.T) {
 		_, _ = fmt.Fprintf(os.Stderr, `ExtractUniqueWords error: %s`, err)
 		return
 	}
-	assert.Equal(t, expected, given, "text should be tokenized into unique words")
+	assert.Equal(t, expected, given, "text should be tokenized into unique words sorted using PL collations")
 }
