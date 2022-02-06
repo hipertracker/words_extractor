@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/hipertracker/word_extractor/app"
+	"wordextractor/app"
 )
 
 const (

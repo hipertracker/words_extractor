@@ -4,5 +4,12 @@
 
 ```
 make build
-./main [-n=NUMBER_OF_WORKERS, integer] [-s] 
+./main -n 8
 ```
+
+<pre>
+Usage of ./main:
+  -n int
+     Number of workers to run (zero to match the number of available CPUs) (default 10)
+  -s Sort results
+</pre>
