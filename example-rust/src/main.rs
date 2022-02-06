@@ -5,11 +5,11 @@ use regex::Regex;
 use std::collections::HashSet;
 use std::fs;
 use std::thread;
-use time::PreciseTime;
+use time::Instant;
 use yaml_rust::YamlLoader;
 
 fn main() -> std::io::Result<()> {
-    let start = PreciseTime::now();
+    let start = Instant::now();
     let with_sorting = false;
     let outdir = "words";
     fs::create_dir_all(outdir)?;
@@ -23,7 +23,7 @@ fn main() -> std::io::Result<()> {
                 let wg = wg.clone();
                 thread::spawn(move || {
                     let filepath = path.to_str().unwrap().replace(".yml", ".txt");
-                    println!("{:?}", filepath);
+                    // println!("{:?}", filepath);
                     let text = fs::read_to_string(&filepath)
                         .unwrap()
                         .to_lowercase()
@@ -41,12 +41,14 @@ fn main() -> std::io::Result<()> {
                     let docs = YamlLoader::load_from_str(&yaml).unwrap();
                     let meta = &docs[0];
                     let out = format!(
-                        "{}/extracted-words-for-{}.txt",
+                        "{}/{}-{}.txt",
                         outdir,
-                        meta["label"].as_str().unwrap()
+                        meta["lang"].as_str().unwrap(),
+                        meta["code"].as_str().unwrap()
                     );
-                    fs::write(out, words.join("\n"));
-
+                    if let Err(e) = fs::write(out, words.join("\n")) {
+                        println!("Writing error: {}", e.to_string());   
+                    }
                     drop(wg);
                 });
             }
@@ -54,9 +56,7 @@ fn main() -> std::io::Result<()> {
         }
     }
     wg.wait();
-    let end = PreciseTime::now();
-    println!("{:?} seconds.", start.to(end));
+    let end = Instant::now();
+    println!("{:?} seconds.", end - start);
     Ok(())
 }
-
-//  2s
