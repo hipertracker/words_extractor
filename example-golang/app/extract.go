@@ -27,7 +27,7 @@ const (
 // correctly.
 //
 // Rust and Python versions split text according to "[\W\d]+" - anything that is
-// not a word or a digit. WTF?
+// not a word or a digit. TODO: comfirm if some words contain digits
 func splitWordsUnicode(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	var start int
 	var r rune
