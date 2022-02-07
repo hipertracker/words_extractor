@@ -39,7 +39,9 @@ The new optimized Golang code version is very fast, slower than Rust but faster 
 
 * Crystal = currently supports only Turkish collations. Probably because the language is young and does not have a large enough community or company behind it.
 
-* Golang = has rules for many languages. You can see the influence of a large company and community which makes Golang a mature solution. Sorting slowed the whole task down significantly, but the result is correct (in this case I only checked the results for the Polish language)
+* Golang = has rules for many languages. You can see the influence of a large company and community which makes Golang a mature solution. Sorting slowed the whole task down significantly, but the result is correct.
+
+Golang is the only language from that list that has full mature support for natural sorting in lots of languages. This code implements sorting in 23 languages. It is also very fast, close to Rust although it is not obvious how to optimize its code to work so fast.  Although Golang has simplified syntax it is not simple to know how to use its full power.
 
 ### Kudos
 
