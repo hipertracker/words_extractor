@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"time"
-
 	"wordextractor/app"
 )
 

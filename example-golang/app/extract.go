@@ -110,7 +110,7 @@ func extract(src, dst, lang string, sortResults bool, sem <-chan empty, wg *sync
 
 	// One of the possible optimisations here is to split file in chunks and process
 	// each chunk individually.
-	words, err := collectWords(fd, InitialDictSize)
+	words, err := collectWords(fd, lang, InitialDictSize)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, `extract: reading input "%s": %s`, src, err)
 		return
@@ -146,9 +146,14 @@ func extract(src, dst, lang string, sortResults bool, sem <-chan empty, wg *sync
 	_, _ = fmt.Fprintf(os.Stdout, "Saved %s\n", dst)
 }
 
-func collectWords(r io.Reader, sizeHint int) ([]string, error) {
+func collectWords(r io.Reader, lang string, sizeHint int) ([]string, error) {
 	scanner := bufio.NewScanner(r)
-	scanner.Split(splitWords)
+	ascii := []string{"en", "la"}
+	if stringInSlice(lang, ascii) {
+		scanner.Split(splitWords)
+	} else {
+		scanner.Split(splitWordsUnicode)
+	}
 
 	// map[uint64]empty should take less memory than map[string]empty and avoid
 	// GC checks.
@@ -200,7 +205,8 @@ func writeResults(w io.Writer, words []string) error {
 
 func ExtractUniqueWords(content string, lang string, sizeHint int) ([]string, error) {
 	r := strings.NewReader(content)
-	words, err := collectWords(r, sizeHint)
+	words, err := collectWords(r, lang, sizeHint)
+
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, `collectWords error: %s`, err)
 		return nil, err
@@ -210,4 +216,13 @@ func ExtractUniqueWords(content string, lang string, sizeHint int) ([]string, er
 		return less(words[i], words[j])
 	})
 	return words, nil
+}
+
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }
