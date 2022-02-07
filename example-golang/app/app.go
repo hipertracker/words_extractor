@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+
+	"github.com/bmatcuk/doublestar"
 )
 
 const dirPerms = 0755
@@ -15,7 +17,7 @@ type empty struct{}
 // No error handling, no context cancellation is implemented to match implementations
 // in other languages.
 func Run(srcDir, outDir string, numWorkers int, sortResults bool) error {
-	files, err := filepath.Glob(srcDir)
+	files, err := doublestar.Glob(srcDir)
 	if err != nil {
 		return fmt.Errorf(`app: getting list of files "%s": %w`, srcDir, err)
 	}
@@ -41,7 +43,7 @@ func Run(srcDir, outDir string, numWorkers int, sortResults bool) error {
 		}
 
 		src := file[:len(file)-3] + "txt"
-		dst := filepath.Join(outDir, "extracted-words-for-"+spec.Code+".txt")
+		dst := filepath.Join(outDir, spec.Lang+"-"+spec.Code+".txt")
 
 		wg.Add(1)
 		go extract(src, dst, sortResults, spec.Tag, sem, &wg)

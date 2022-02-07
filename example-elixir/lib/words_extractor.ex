@@ -1,47 +1,57 @@
+use Timex
+
 defmodule WordsExtractor do
   @moduledoc nil
 
+  @pat Regex.compile!("[\W\d]+/u")
+
   def run do
     outdir = "words"
-    clean_dir(outdir)
+    File.rm_rf!(outdir)
+    File.mkdir!(outdir)
+    t = Duration.now()
+    paths = Path.wildcard("../data/??/**/*.yml")
+    count = length(paths)
 
-    walk("../data/pl/", ".yml")
-    |> Task.async_stream(
-      WordsExtractor,
-      :worker,
-      [outdir],
-      ordered: false,
-      timeout: :infinity
-    )
-    |> Enum.to_list()
+    total_size =
+      paths
+      |> Enum.with_index(1)
+      |> Task.async_stream(
+        WordsExtractor,
+        :worker,
+        [outdir, count],
+        ordered: false,
+        timeout: :infinity
+      )
+      |> Enum.to_list()
+      |> Enum.reduce(0, fn {:ok, num}, acc -> acc + num end)
+
+    elapsed = Duration.diff(Duration.now(), t, :milliseconds)
+    IO.puts("Total time: #{elapsed / 1000}s")
+    IO.puts("Total size: #{(total_size / 1024 / 1024) |> round} MB")
   end
 
-  def clean_dir(path) do
-    File.rm_rf!(path)
-    File.mkdir!(path)
-  end
+  def worker({path, i}, outdir, count) do
+    %{"code" => code, "lang" => lang} = YamlElixir.read_from_file!(path)
 
-  def worker(path, outdir) do
-    %{"code" => code} = YamlElixir.read_from_file!(path)
+    filepath = String.replace(path, ".yml", ".txt")
+    %File.Stat{:size => filesize} = File.stat!(filepath)
 
-    words =
-      File.read!(String.replace(path, ".yml", ".txt"))
+    content =
+      File.read!(filepath)
       |> String.downcase()
       |> String.trim()
-      |> then(&Regex.split(~r/[\W\d]+/u, &1))
+      |> then(&Regex.split(@pat, &1))
       |> MapSet.new()
-      # sorting does not respect collation
-      |> Enum.sort()
+      |> Enum.join("\n")
 
-    File.write!("#{outdir}/extracted-#{code}.txt", Enum.join(words, "\n"))
-    IO.puts(path)
-  end
+    # sorting does not respect collation so it is ignored
+    # |> Enum.sort()
 
-  def walk(path, pattern) do
-    dir = String.to_charlist(path)
-    regexp = String.to_charlist(pattern)
+    it = i |> Integer.to_string() |> String.pad_leading(3)
+    IO.puts("[#{it}/#{count}] #{path}/#{lang}-#{code}.txt")
 
-    :filelib.fold_files(dir, regexp, true, fn file, acc -> [file | acc] end, [])
-    |> Enum.map(fn filepath -> to_string(filepath) end)
+    File.write!("./#{outdir}/#{lang}-#{code}.txt", content)
+    filesize
   end
 end

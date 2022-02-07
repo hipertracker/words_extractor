@@ -8,9 +8,16 @@ build:
 run: build
 	./${BINARY_NAME}
 
+run-sort: build
+	./${BINARY_NAME} -n 10 -s
+
 test:
+	@go test ./... -v
+
+coverage:
 	@go test ./... -v -coverprofile=coverage.out  
-	
+
+
 cover: test
 	@go tool cover -html=coverage.out
 
@@ -19,3 +26,4 @@ clean:
 	rm -f coverage.out 
 	rm -f ./${BINARY_NAME}
 	rm -rf ./words
+

@@ -51,7 +51,6 @@ if __name__ == "__main__":
 
     pool = mp.Pool(mp.cpu_count())
 
-    print("Processing")
     results = []
     paths = glob.glob(src_path, recursive=True)
     if not paths:

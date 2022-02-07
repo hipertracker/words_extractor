@@ -1,29 +1,31 @@
 require 'yaml'
+require 'yaml'
 require 'parallel'
 require 'etc'
 require 'fileutils'
 
 outdir = 'words'
-start = Time.now
 
 FileUtils.rm_rf(outdir)
 Dir.mkdir(outdir)
 
+t = Time.now
+
 sorted = false
 
-paths = Dir['../data/pl/**/*.yml']
+paths = Dir['../data/??/**/*.yml']
+count = paths.count
 
-Parallel.each(paths, in_processes: Etc.nprocessors) do |yaml_path| 
+sizes = Parallel.map_with_index(paths, in_processes: Etc.nprocessors) do |yaml_path, i|
   meta = YAML.load_file(yaml_path)
-  words = IO.read(yaml_path.gsub('.yml', '.txt')).downcase.strip.split(/[^\p{word}]+/).uniq
-  if sorted
-    words = words.sort
-  end
+  filepath = yaml_path.gsub('.yml', '.txt')
+  words = IO.read(filepath).downcase.strip.split(/[^\p{word}]+/).uniq
+  words = words.sort if sorted
   outpath = "#{outdir}/#{meta['lang']}-#{meta['code']}.txt"
-  puts outpath
+  puts(format('[%3d/%d] %s/%s', i, count, yaml_path, outpath))
   File.write(outpath, words.join("\n"))
+  File.size(filepath)
 end
 
-secs = Time.now - start
-puts "Total time: #{secs} s"
-
+puts "Total size: #{(sizes.sum / 1024.0 / 1024).round} MB"
+puts "Total time: #{Time.now - t} s"

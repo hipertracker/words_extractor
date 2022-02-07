@@ -141,3 +141,27 @@ func writeResults(w io.Writer, words []string) error {
 
 	return nil
 }
+
+func ExtractUniqueWords(content string, lang string, sizeHint int) ([]string, error) {
+	r := strings.NewReader(content)
+	words, err := collectWords(r, lang, sizeHint)
+
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, `collectWords error: %s`, err)
+		return nil, err
+	}
+	less := collate.IndexString(lang)
+	sort.Slice(words, func(i, j int) bool {
+		return less(words[i], words[j])
+	})
+	return words, nil
+}
+
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
+}

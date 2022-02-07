@@ -1,4 +1,4 @@
-module github.com/hipertracker/word_extractor
+module wordextractor
 
 go 1.17
 
