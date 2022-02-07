@@ -14,7 +14,7 @@ The following results are for 123 unique utf-8 Bible text files in 23 languages 
 * Machine: MacBook Pro 16" 64GB 2TB M1Max 10 cores.
 
 <pre>
-1. Rust 1.58      = 1.14s (with sorting: 1.62s) with tokyo (previous: 1.34s, with sorting: 1.79)
+1. Rust 1.58      = 1.14s (with sorting: 1.59s) with tokyo (previous: 1.34s, with sorting: 1.79)
 2. Golang 1.17.6  = 1.34s (with sorting: 6.55s)
 3. Python 3.10.2  = 2.80s (with multiprocessing)
 4. Julia 1.7.1    = 4.522

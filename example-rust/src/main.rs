@@ -7,7 +7,7 @@ use std::path::Path;
 use tokio::fs;
 use yaml_rust::YamlLoader;
 
-const SORT: bool = true;
+const SORT: bool = false;
 const OUTDIR: &str = "words";
 const FILE_DIR: &str = "../data/??/**/*.yml";
 static SEPARATOR_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"[\W\d]+").unwrap());
@@ -56,6 +56,8 @@ async fn main() -> std::io::Result<()> {
         tokio::spawn(async {
             let yaml_path = entry.expect("should be existed");
             let txt_path = yaml_path.with_extension("txt");
+
+            println!("{:?}", txt_path);
 
             let outdir_submission =
                 tokio::spawn(async { create_outdir().await.expect("unable to create outdir") });
