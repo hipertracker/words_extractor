@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"os"
 
+	"golang.org/x/text/language"
 	"gopkg.in/yaml.v3"
 )
 
 type MetaConfig struct {
-	Lang  string `yaml:"lang"`
-	Code  string `yaml:"code"`
-	Label string `yaml:"label"`
+	Lang  string       `yaml:"lang"`
+	Code  string       `yaml:"code"`
+	Label string       `yaml:"label"`
+	Tag   language.Tag `yaml:"-"`
 }
 
 func ReadSpec(filepath string) (*MetaConfig, error) {
@@ -24,5 +26,11 @@ func ReadSpec(filepath string) (*MetaConfig, error) {
 		return nil, fmt.Errorf(`spec: parsing YAML file "%s": %w`, filepath, err)
 	}
 
+	t, err := language.Parse(config.Lang)
+	if err != nil {
+		return nil, fmt.Errorf(`spec: invalid language code "%s": %w`, config.Code, err)
+	}
+
+	config.Tag = t
 	return &config, nil
 }

@@ -44,7 +44,7 @@ func Run(srcDir, outDir string, numWorkers int, sortResults bool) error {
 		dst := filepath.Join(outDir, "extracted-words-for-"+spec.Code+".txt")
 
 		wg.Add(1)
-		go extract(src, dst, "POLISH_CI", sortResults, sem, &wg)
+		go extract(src, dst, sortResults, spec.Tag, sem, &wg)
 	}
 
 	wg.Wait()
