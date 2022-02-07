@@ -148,7 +148,7 @@ func extract(src, dst, lang string, sortResults bool, sem <-chan empty, wg *sync
 
 func collectWords(r io.Reader, lang string, sizeHint int) ([]string, error) {
 	scanner := bufio.NewScanner(r)
-	ascii := []string{"en", "la"}
+	ascii := []string{"en", "la", "eo"} // English, Latin, Esperanto
 	if stringInSlice(lang, ascii) {
 		scanner.Split(splitWords)
 	} else {
