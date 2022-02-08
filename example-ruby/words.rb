@@ -4,7 +4,7 @@ require 'etc'
 require 'fileutils'
 require 'optparse'
 
-class WordExtractor
+class WordsExtractor
   def initialize(cores: Etc.nprocessors, sorting: false, outdir: 'words', source: '../data/??/**/*.yml')
     @cores = cores
     @sorting = sorting
@@ -64,19 +64,5 @@ if __FILE__ == $PROGRAM_NAME
     end
     opts.on('-s', 'Sort results') { |v| options[:s] = v }
   end.parse!
-  WordExtractor.new(cores: options[:n], sorting: options[:s]).run
+  WordsExtractor.new(cores: options[:n], sorting: options[:s]).run
 end
-
-# class A
-#   def initialize(x:, y:, z:)
-#     @x = x
-#     @y = y
-#     @z = z
-#   end
-
-#   def run
-#     puts "x=#{@x}, y=#{@y}, z=#{@z}"
-#   end
-# end
-
-# A.new(y: 'Y', x: 'X', z: 'Z').run

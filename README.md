@@ -31,7 +31,7 @@ The new optimized Golang code version is very fast, slower than Rust but faster 
 
 * Python = has a great implementation of [ICU](https://icu.unicode.org/related) library however it does not support arm64/M1 platform, hence I couldn't use it in this comparison.
 
-* Ruby = can sort unicode text but withot collations becase it can't use ICU on arm64/M1
+* Ruby = can sort unicode text but without collations becase it can't use ICU on arm64/M1
 
 * Elixir = same as Python, no ICU for M1.
 
