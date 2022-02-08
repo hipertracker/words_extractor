@@ -51,4 +51,4 @@ The new optimized Golang code version is very fast, slower than Rust but faster 
 
 2022-02-08
 
-Added improved Ruby code version with correct reading the pure text to tokenize (it ignores sigla in each verse), and with the correct regular expression for extracting words. The code is a little slower but it works as expected.
+Added improved Ruby code version with correct reading the pure text to tokenize (it ignores sigla in each verse), and with the correct regular expression for extracting words. The code is a little slower but it works almost as expected. (almost because for arm64/M1 it can't use ICU)
