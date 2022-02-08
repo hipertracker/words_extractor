@@ -1,31 +1,82 @@
 require 'yaml'
-require 'yaml'
 require 'parallel'
 require 'etc'
 require 'fileutils'
+require 'optparse'
 
-outdir = 'words'
+class WordExtractor
+  def initialize(cores: Etc.nprocessors, sorting: false, outdir: 'words', source: '../data/??/**/*.yml')
+    @cores = cores
+    @sorting = sorting
+    @outdir = outdir
+    @source = source
+  end
 
-FileUtils.rm_rf(outdir)
-Dir.mkdir(outdir)
+  def clear_output
+    FileUtils.rm_rf(@outdir)
+    Dir.mkdir(@outdir)
+  end
 
-t = Time.now
+  def get_words(filepath)
+    IO.readlines(filepath).map do |line|
+      line.strip.downcase.split(' ')[2...-1].join(' ').split(/[^\p{L}]+/).uniq
+    end.flatten.uniq
+  end
 
-sorted = false
+  def save_words(words:, meta:, yaml_path:, count:, i:)
+    outpath = "#{@outdir}/#{meta['lang']}-#{meta['code']}.txt"
+    puts(format('[%3d/%d] %s/%s', i, count, yaml_path, outpath))
+    File.write(outpath, words.join("\n"))
+  end
 
-paths = Dir['../data/??/**/*.yml']
-count = paths.count
-
-sizes = Parallel.map_with_index(paths, in_processes: Etc.nprocessors) do |yaml_path, i|
-  meta = YAML.load_file(yaml_path)
-  filepath = yaml_path.gsub('.yml', '.txt')
-  words = IO.read(filepath).downcase.strip.split(/[^\p{word}]+/).uniq
-  words = words.sort if sorted
-  outpath = "#{outdir}/#{meta['lang']}-#{meta['code']}.txt"
-  puts(format('[%3d/%d] %s/%s', i, count, yaml_path, outpath))
-  File.write(outpath, words.join("\n"))
-  File.size(filepath)
+  def run
+    print "Running using #{@cores} processes"
+    print ' with sorting' if @sorting
+    puts '...'
+    clear_output
+    start = Time.now
+    paths = Dir[@source]
+    count = paths.count
+    sizes = Parallel.map_with_index(paths, in_processes: @cores) do |yaml_path, i|
+      meta = YAML.load_file(yaml_path)
+      filepath = yaml_path.gsub('.yml', '.txt')
+      words = get_words(filepath)
+      words.sort! if @sorting
+      save_words(words:, meta:, yaml_path:, count:, i:)
+      File.size(filepath)
+    end
+    puts "Total size: #{(sizes.sum / 1024.0 / 1024).round} MB"
+    puts "Total time: #{Time.now - start} s"
+  end
 end
 
-puts "Total size: #{(sizes.sum / 1024.0 / 1024).round} MB"
-puts "Total time: #{Time.now - t} s"
+if __FILE__ == $PROGRAM_NAME
+  cores = Etc.nprocessors
+  options = { s: false, n: cores }
+  OptionParser.new do |opts|
+    opts.banner = "Usage: ruby #{__FILE__} [options]"
+    opts.on('-n [NUM]', OptionParser::DecimalInteger, "Number of cores to run (default #{cores})") do |val|
+      options[:n] = if val.negative? || val > cores
+                      cores
+                    else
+                      val
+                    end
+    end
+    opts.on('-s', 'Sort results') { |v| options[:s] = v }
+  end.parse!
+  WordExtractor.new(cores: options[:n], sorting: options[:s]).run
+end
+
+# class A
+#   def initialize(x:, y:, z:)
+#     @x = x
+#     @y = y
+#     @z = z
+#   end
+
+#   def run
+#     puts "x=#{@x}, y=#{@y}, z=#{@z}"
+#   end
+# end
+
+# A.new(y: 'Y', x: 'X', z: 'Z').run
