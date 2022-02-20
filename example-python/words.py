@@ -19,22 +19,18 @@ import yaml
 
 
 def worker(path: str, outdir: str, sorting: bool = False) -> Tuple[str, int]:
-    # if sorting:
-    #     if i18nsorting:
-    #         collator = Collator.createInstance(Locale("pl_PL.UTF-8"))
-    #     print("I18nN sorting not available")
-
-    separator = re.compile("[\W\d]+")
+    if sorting and i18nsorting:
+        collator = Collator.createInstance(Locale("pl_PL.UTF-8"))
+    
+    separator = re.compile("[\W\d]+") # also ignore Strong numbers (Python has no \p{L} pattern)
     filepath = path.replace(".yml", ".txt")
     filesize = os.path.getsize(filepath)
     with open(filepath) as file:
-        text = file.read().lower().rstrip()
-        words = set(re.split(separator, text))
-        try:
-            words.remove('')
-        except KeyError:
-            pass
-        words = list(words)
+        words = []
+        for line in file.readlines():
+            _line = ' '.join(line.strip().lower().split(' ')[2:-1]) # without book reference
+            words += [w for w in set(re.split(separator, _line)) if w and len(w) > 1]
+        words = list(set(words))
     with open(path) as file:
         meta = yaml.safe_load(file)
     with open(f"{outdir}/{meta['lang']}-{meta['code']}.txt", "w") as file:
