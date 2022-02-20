@@ -24,8 +24,6 @@ func main() {
 
 	defaultNumWorkers := runtime.NumCPU()
 
-	// In the original Go code, results where always sorted, unlike in Rust or
-	// Python implementations. Sorting is turned off, by default.
 	var sortResults bool
 	var numWorkers int
 

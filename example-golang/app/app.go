@@ -46,7 +46,7 @@ func Run(srcDir, outDir string, numWorkers int, sortResults bool) error {
 		dst := filepath.Join(outDir, spec.Lang+"-"+spec.Code+".txt")
 
 		wg.Add(1)
-		go extract(src, dst, langMap[spec.Lang], sortResults, sem, &wg)
+		go extract(src, dst, sortResults, spec.Tag, sem, &wg)
 	}
 
 	wg.Wait()
@@ -64,30 +64,4 @@ func clearOutput(outDir string) error {
 	}
 
 	return nil
-}
-
-var langMap = map[string]string{
-	"en": "ENGLISH_CI", // The first language is used as fallback.
-	"la": "ENGLISH_CI", // Latin
-	"eo": "ENGLISH_CI", // Esperanto
-	"ar": "ARABIC_CI",
-	"cz": "CZECH_CI",
-	"da": "DANISH_CI", // ?
-	"de": "GERMAN_CI",
-	"el": "GREEK_CI",
-	"es": "SPANISH_CI",
-	"fi": "FINNISH_CI",
-	"fr": "FRENCH_CI",
-	"he": "HEBREW_CI",
-	"hr": "CROATIAN_CI",
-	"hu": "HUNGARIAN_CI",
-	"it": "ITALIAN_CI",
-	"lt": "LITHUANIAN_CI",
-	"nl": "DUTCH_CI",
-	"pl": "POLISH_CI",
-	"pt": "PORTUGUESE_CI",
-	"ru": "RUSSIAN_CI",
-	"sk": "SLOVAK_CI",
-	"sv": "SWEDISH_CI",
-	"uk": "UKRAINIAN_CI",
 }

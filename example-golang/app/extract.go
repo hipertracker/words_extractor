@@ -6,29 +6,26 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"sort"
 	"strings"
 	"sync"
 	"unicode"
 	"unicode/utf8"
-	"unsafe"
 
-	"github.com/tidwall/collate"
+	"github.com/cespare/xxhash/v2"
+	"golang.org/x/text/collate"
+	"golang.org/x/text/language"
 )
 
-const (
-	filePerm        = 0644
-	InitialDictSize = 10000
-)
+const filePerm = 0644
 
-// splitWordsUnicode splits data into words, using Unicode Letter character class.
+// splitWordsFunc splits data into words, using Unicode Letter character class.
 // It works similar to the regular expression "[^\p{L}]+". This is what was used
 // in the original code. Unicode function has slight overhead, but handles UTF-8
 // correctly.
 //
 // Rust and Python versions split text according to "[\W\d]+" - anything that is
-// not a word or a digit. TODO: comfirm if some words contain digits
-func splitWordsUnicode(data []byte, atEOF bool) (advance int, token []byte, err error) {
+// not a word or a digit. WTF?
+func splitWordsFunc(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	var start int
 	var r rune
 	for width := 0; start < len(data); start += width {
@@ -50,52 +47,7 @@ func splitWordsUnicode(data []byte, atEOF bool) (advance int, token []byte, err 
 	return start, nil, nil
 }
 
-// splitWords splits data into words similar to the "[\W\d]+" regular expression.
-func splitWords(data []byte, atEOF bool) (advance int, token []byte, err error) {
-	var start int
-	var r rune
-	for width := 0; start < len(data); start += width {
-		if r, width = utf8.DecodeRune(data[start:]); isLatin(r) {
-			break
-		}
-	}
-
-	for width, i := 0, start; i < len(data); i += width {
-		if r, width = utf8.DecodeRune(data[i:]); !isLatin(r) {
-			return i + width, data[start:i], nil
-		}
-	}
-
-	if atEOF && len(data) > start {
-		return len(data), data[start:], nil
-	}
-
-	return start, nil, nil
-}
-
-func isLatin(r rune) bool {
-	if r >= 0x80 || r == 0x00 {
-		return false
-	}
-
-	return ('a' <= r && r <= 'z') || ('A' <= r && r <= 'Z')
-}
-
-//go:noescape
-//go:linkname memhash runtime.memhash
-func memhash(p unsafe.Pointer, h, s uintptr) uintptr
-
-type stringStruct struct {
-	str unsafe.Pointer
-	len int
-}
-
-func memHashString(str string) uint64 {
-	ss := (*stringStruct)(unsafe.Pointer(&str))
-	return uint64(memhash(ss.str, 0, uintptr(ss.len)))
-}
-
-func extract(src, dst, lang string, sortResults bool, sem <-chan empty, wg *sync.WaitGroup) {
+func extract(src, dst string, sortResults bool, tag language.Tag, sem <-chan empty, wg *sync.WaitGroup) {
 	defer func() {
 		<-sem
 		wg.Done()
@@ -110,17 +62,15 @@ func extract(src, dst, lang string, sortResults bool, sem <-chan empty, wg *sync
 
 	// One of the possible optimisations here is to split file in chunks and process
 	// each chunk individually.
-	words, err := collectWords(fd, lang, InitialDictSize)
+	words, err := collectWords(fd)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, `extract: reading input "%s": %s`, src, err)
 		return
 	}
 
 	if sortResults {
-		less := collate.IndexString(lang)
-		sort.Slice(words, func(i, j int) bool {
-			return less(words[i], words[j])
-		})
+		collator := collate.New(tag)
+		collator.SortStrings(words)
 	}
 
 	wd, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, filePerm)
@@ -146,28 +96,18 @@ func extract(src, dst, lang string, sortResults bool, sem <-chan empty, wg *sync
 	_, _ = fmt.Fprintf(os.Stdout, "Saved %s\n", dst)
 }
 
-func collectWords(r io.Reader, lang string, sizeHint int) ([]string, error) {
+func collectWords(r io.Reader) ([]string, error) {
 	scanner := bufio.NewScanner(r)
-	ascii := []string{"en", "la", "eo"} // English, Latin, Esperanto
-	if stringInSlice(lang, ascii) {
-		scanner.Split(splitWords)
-	} else {
-		scanner.Split(splitWordsUnicode)
-	}
+	scanner.Split(splitWordsFunc)
 
 	// map[uint64]empty should take less memory than map[string]empty and avoid
 	// GC checks.
-	//
-	// sizeHint is used to preallocate map[string]empty and []string slice and skip
-	// initial reallocation when they should grow. It is a "magic" number which
-	// should not be too big or too small. Ideally, it should be approximated from
-	// the text.
-	dict := make(map[uint64]empty, sizeHint)
-	words := make([]string, 0, sizeHint)
+	dict := make(map[uint64]empty)
+	words := make([]string, 0)
 
 	for scanner.Scan() {
 		word := strings.ToLower(scanner.Text())
-		hash := memHashString(word)
+		hash := xxhash.Sum64String(word)
 		if _, ok := dict[hash]; ok {
 			continue // duplicate detected
 		}
@@ -201,28 +141,4 @@ func writeResults(w io.Writer, words []string) error {
 	}
 
 	return nil
-}
-
-func ExtractUniqueWords(content string, lang string, sizeHint int) ([]string, error) {
-	r := strings.NewReader(content)
-	words, err := collectWords(r, lang, sizeHint)
-
-	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, `collectWords error: %s`, err)
-		return nil, err
-	}
-	less := collate.IndexString(lang)
-	sort.Slice(words, func(i, j int) bool {
-		return less(words[i], words[j])
-	})
-	return words, nil
-}
-
-func stringInSlice(a string, list []string) bool {
-	for _, b := range list {
-		if b == a {
-			return true
-		}
-	}
-	return false
 }
