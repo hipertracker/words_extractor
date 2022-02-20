@@ -1,22 +1,49 @@
 module words_extractor_jl
 
+using ArgParse
 using Distributed
 using YAML
 using Glob
 
 const outdir = "words"
 
-function worker(yaml_path, i, count)
+function parse_commandline()
+    s = ArgParseSettings()
+    @add_arg_table s begin
+        "-s"
+        help = "Sort results"
+        action = :store_true
+    end
+    return parse_args(s)
+end
+
+function worker(yaml_path, sorting, i, count)
     path = get_filepath(yaml_path)
-    words = get_words(yaml_path)
+    words = get_words(yaml_path, sorting)
     write(path, join(words, "\n"))
     println("[$(lpad(i, 3, ' '))/$count] $path")
 end
 
-function get_words(yaml_path)
-    text_path = replace(yaml_path, ".yml" => ".txt")
-    text = read(text_path, String) |> lowercase
-    split(text, r"[\W\d]+") |> Set |> collect
+function get_words(yaml_path, sorting = false)
+    words = []
+    open(replace(yaml_path, ".yml" => ".txt")) do file
+        for line in readlines(file)
+            # exclude beginning book refrence from the line
+            text = split(line, " ")[begin+2:end] |> t -> join(t, " ")
+            tokens =
+                text |>
+                lowercase |>
+                t -> split(t, r"[\W\d]+") |> t -> filter(token -> length(token) > 1, t)
+            append!(words, tokens)
+        end
+    end
+    unique_words = Set(words)
+    if sorting
+        arr = collect(unique_words)
+        sort(arr)
+    else
+        unique_words
+    end
 end
 
 function get_filepath(path)
@@ -26,16 +53,25 @@ end
 
 function rdir(dir::AbstractString, pat::Glob.FilenameMatch)
     result = String[]
-    for (root, dirs, files) in walkdir(dir)
+    for (root, _dirs, files) in walkdir(dir)
         filepaths = joinpath.(root, files)
         append!(result, filter!(f -> occursin(pat, f), filepaths))
     end
-    return result
+    result
 end
 
 rdir(dir::AbstractString, pat::AbstractString) = rdir(dir, Glob.FilenameMatch(pat))
 
 function main()
+    parsed_args = parse_commandline()
+    sorting = parsed_args["s"]
+
+    addprocs()
+    println(string("Workers ", nworkers()))
+    println(string("Processing... using ", Threads.nthreads(), " threads"))
+    if sorting
+        println("with sorting")
+    end
     if ispath(outdir)
         rm(outdir, recursive = true)
     end
@@ -45,13 +81,10 @@ function main()
     i = 1
     Threads.@threads for path in paths
         # println("Spawn $path")
-        worker(path, i, count)
+        worker(path, sorting, i, count)
         i += 1
     end
 end
 
-addprocs()
-println(string("Workers ", nworkers()))
-println(string("Processing... using ", Threads.nthreads(), " threads"))
 @time main()
 end # module
