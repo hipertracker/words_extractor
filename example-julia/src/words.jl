@@ -25,7 +25,8 @@ function worker(yaml_path, sorting, i, count)
 end
 
 function get_words(yaml_path, sorting = false)
-    words = []
+    pattern = r"[\W\d]+"
+    unique_words = Set()
     open(replace(yaml_path, ".yml" => ".txt")) do file
         for line in readlines(file)
             # exclude beginning book refrence from the line
@@ -33,11 +34,11 @@ function get_words(yaml_path, sorting = false)
             tokens =
                 text |>
                 lowercase |>
-                t -> split(t, r"[\W\d]+") |> t -> filter(token -> length(token) > 1, t)
-            append!(words, tokens)
+                t -> split(t, pattern) |> t -> filter(token -> length(token) > 1, t)
+            union!(unique_words, tokens)
         end
     end
-    unique_words = Set(words)
+    # unique_words = Set(words)
     if sorting
         arr = collect(unique_words)
         sort(arr)
