@@ -19,7 +19,7 @@ class WordsExtractor
 
   def get_words(filepath)
     IO.readlines(filepath).map do |line|
-      line.strip.downcase.split(' ')[2...-1].join(' ').split(/[^\p{L}]+/).uniq
+      line.strip.downcase.split(' ')[2...-1].join(' ').split(/[^\p{L}]/).uniq.select { |s| s.size > 1 }
     end.flatten.uniq
   end
 
