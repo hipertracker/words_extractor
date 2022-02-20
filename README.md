@@ -15,12 +15,12 @@ The following results are for 123 unique utf-8 Bible text files in 23 languages 
 
 <pre>
 1. Rust 1.58      = 1.14s (with sorting: 1.59s) with tokyo (previous: 1.34s, with sorting: 1.79)
-2. Golang 1.17.6  = 1.34s (with sorting: 6.55s)
+2. Golang 1.17.6  = 1.34s (with sorting: 4.56s)
 3. Python 3.10.2  = 2.80s (with multiprocessing)
 4. Julia 1.7.1    = 4.522
 5. Crystal 1.3.2  = 5.72s
 6. Elixir 1.13.2  = 7.82s
-7. Ruby 3.1.0     = 8.31s (with Parallel)
+7. Ruby 3.1.0     = 10.44s (with Parallel), with sorting: 10.51s
 </pre>
 
 ### Conclusion
@@ -31,7 +31,7 @@ The new optimized Golang code version is very fast, slower than Rust but faster 
 
 * Python = has a great implementation of [ICU](https://icu.unicode.org/related) library however it does not support arm64/M1 platform, hence I couldn't use it in this comparison.
 
-* Ruby = same as Python, no ICU for M1.
+* Ruby = can sort unicode text but without collations becase it can't use ICU on arm64/M1
 
 * Elixir = same as Python, no ICU for M1.
 
@@ -46,3 +46,9 @@ The new optimized Golang code version is very fast, slower than Rust but faster 
 [@romanatnews](https://github.com/romanatnews) (Golang example refactoring)
 
 [@pan93412](https://github.com/pan93412) (Rust example refactoring using Tokyo runtime)
+
+## CHANGES
+
+2022-02-08
+
+Added improved Ruby code version with correct reading the pure text to tokenize (it ignores sigla in each verse), and with the correct regular expression for extracting words. The code is a little slower but it works almost as expected. (almost because for arm64/M1 it can't use ICU)
