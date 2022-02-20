@@ -47,7 +47,7 @@ The new optimized Golang code version is very fast, slower than Rust but faster 
 
 [@pan93412](https://github.com/pan93412) (Rust example refactoring using Tokyo runtime)
 
-## CHANGES
+## Changes
 
 2022-02-08
 
