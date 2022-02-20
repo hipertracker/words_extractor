@@ -14,13 +14,13 @@ The following results are for 123 unique utf-8 Bible text files in 23 languages 
 * Machine: MacBook Pro 16" 64GB 2TB M1Max 10 cores.
 
 <pre>
-1. Rust 1.58      = 1.14s (with sorting: 1.59s) with tokyo (previous: 1.34s, with sorting: 1.79)
-2. Golang 1.17.6  = 1.34s (with sorting: 4.56s)
-3. Python 3.10.2  = 2.80s (with multiprocessing)
-4. Julia 1.7.1    = 4.522
+1. Rust 1.58      = 1.14s, with sorting: 1.59s
+2. Golang 1.17.7  = 1.84s, with sorting: 2.16s
+3. Python 3.10.2  = 3.04s, with sorting: 3.21s
+4. Julia 1.7.1    = 4.52s
 5. Crystal 1.3.2  = 5.72s
 6. Elixir 1.13.2  = 7.82s
-7. Ruby 3.1.0     = 10.44s (with Parallel), with sorting: 10.51s
+7. Ruby 3.1.0     = 10.56s, with sorting: 10.70s
 </pre>
 
 ### Conclusion
@@ -51,4 +51,9 @@ The new optimized Golang code version is very fast, slower than Rust but faster 
 
 2022-02-08
 
-Added improved Ruby code version with correct reading the pure text to tokenize (it ignores sigla in each verse), and with the correct regular expression for extracting words. The code is a little slower but it works almost as expected. (almost because for arm64/M1 it can't use ICU)
+* Added improved Ruby code version with correct reading the pure text to tokenize (it ignores sigla in each verse), and with the correct regular expression for extracting words. The code is a little slower but it works almost as expected. (almost because for arm64/M1 it can't use ICU)
+
+2022-02-20
+
+* Added newer Golang 1.1.17 and improved code
+* Added fixed Python version ignoring sigla (like in Ruby version)
