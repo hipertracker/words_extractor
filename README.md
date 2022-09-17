@@ -10,7 +10,7 @@ The difficulty in sorting words is due to the need to handle sorting rules accor
 
 The following results are for 123 unique utf-8 Bible text files in 23 languages (used at mybible.pl site) They take 504MB. (The repo contains only a few sample files in the 'data' folder. For testing more data you could multiple files by cloning *.txt (and the associated*.yml) file under different names)
 
-* Platform: MacOS 12.6
+* Platform: macOS 12.6
 * Machine: MacBook Pro 16" 64GB 2TB M1Max 10 cores.
 
 <pre>
