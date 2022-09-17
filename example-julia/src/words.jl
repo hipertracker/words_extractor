@@ -1,9 +1,15 @@
 module words_extractor_jl
 
+import Pkg
+Pkg.add("ArgParse")
+Pkg.add("YAML")
+Pkg.add("Glob")
+
 using ArgParse
 using Distributed
 using YAML
 using Glob
+
 
 const outdir = "words"
 
