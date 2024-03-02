@@ -1,4 +1,0 @@
-# PyICU>=2.7.4
-PyYAML
-black
-ipython
