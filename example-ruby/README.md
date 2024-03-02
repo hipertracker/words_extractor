@@ -14,5 +14,5 @@ Usage: ruby words.rb [options]
 Run
 
 ```
-ruby words.rb -s
+ruby --jit words.rb -s
 ```

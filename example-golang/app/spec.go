@@ -28,9 +28,8 @@ func ReadSpec(filepath string) (*MetaConfig, error) {
 
 	t, err := language.Parse(config.Lang)
 	if err != nil {
-		return nil, fmt.Errorf(`spec: invalid language code "%s": %w`, config.Code, err)
+		return nil, fmt.Errorf(`spec: invalid language code "%s": %w (%s)`, config.Code, err, filepath)
 	}
-
 	config.Tag = t
 	return &config, nil
 }

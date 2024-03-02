@@ -39,7 +39,7 @@ func main() {
 
 	var exitCode int
 	if err = app.Run(filepath.Join(wd, srcPath), filepath.Join(wd, outDir), numWorkers, sortResults); err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "Shit happened: %s", err)
+		_, _ = fmt.Fprintf(os.Stderr, "Worker error: %s", err)
 		exitCode = 1
 	}
 
