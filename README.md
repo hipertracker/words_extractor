@@ -51,7 +51,7 @@ The new optimized Golang code version is very fast, slower than Rust but faster 
 
 2024-03-02
 
-* Updated Python version to 3.12.2, added poetry, solved missing icu4 collations for M1 processors
+* Updated Python version to 3.12.2, added poetry, solved missing icu4 collations for M1 processors, added a fancy progress bar
 
 2022-09-17
 

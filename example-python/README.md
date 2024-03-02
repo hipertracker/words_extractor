@@ -3,10 +3,8 @@
 ## setup and run
 
 ```
-python -m venv .venv
-source .venv/bin/activate
-pip install -U pip
-pip install -r requirements.txt
+poetry shell
+poetry install --no-root
 ```
 
 Syntax
