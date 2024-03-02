@@ -9,7 +9,6 @@ from typing import NoReturn
 import regex
 import yaml
 from alive_progress import alive_bar
-from icecream import ic
 from icu import Collator, Locale
 
 LOCALES: dict[str, str] = {
@@ -104,7 +103,6 @@ def main(src: str, out_dir: str) -> NoReturn:
     if sorting:
         print(" with sorting")
 
-
     t = time.time()
 
     paths = glob.glob(src, recursive=True)
@@ -115,7 +113,11 @@ def main(src: str, out_dir: str) -> NoReturn:
     pool = mp.Pool(cpu_cores)
     results: list = []
     for yaml_filepath in paths:
-        kwargs = {"yaml_filepath": yaml_filepath, "out_dir": out_dir, "sorting": sorting}
+        kwargs = {
+            "yaml_filepath": yaml_filepath,
+            "out_dir": out_dir,
+            "sorting": sorting,
+        }
         res = pool.apply_async(worker, kwds=kwargs)
         results.append(res)
 
@@ -131,6 +133,7 @@ def main(src: str, out_dir: str) -> NoReturn:
     print(f"Total size: {round((total_size / 1024 / 1024))} MB")
     t = time.time() - t
     print(f"Total time: {t:.4f} s")
+
 
 if __name__ == "__main__":
     main(src="../data/??/**/*.yml", out_dir="words")
