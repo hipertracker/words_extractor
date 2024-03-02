@@ -14,13 +14,13 @@ The following results are for 123 unique utf-8 Bible text files in 23 languages 
 * Machine: MacBook Pro 16" 64GB 2TB M1Max 10 cores.
 
 <pre>
-1. Rust 1.63           = 1.15s, with sorting: 1.64s
-2. Golang 1.19.1       = 1.38s, with sorting: 1.71s
+1. Rust 1.63           = 1.15s, sorting: 1.64s
+2. Golang 1.22.0       = 1.40s, sorting with collations: 1.71s
 3. Python 3.12.2       = 5.69, sorting with collations: 6.04s
 4. Crystal 1.5.1       = 5.61s
 5. Elixir 1.14.0       = 7.34s
-6. Julia 1.8.1         = 12.13s, with sorting: 12.22s
-7. Ruby 3.3.0          = 12.63s, sorting with collations: 12.87s
+6. Julia 1.8.1         = 12.13s, sorting: 12.22s
+7. Ruby 3.3.0          = 12.63s, sorting with collations: 22.00s
 </pre>
 
 ### Conclusion
@@ -52,6 +52,8 @@ The new optimized Golang code version is very fast, slower than Rust but faster 
 2024-03-02
 
 * Updated Python version to 3.12.2, added poetry, solved missing icu4 collations for M1 processors, added a fancy progress bar
+* Updated Golang version to 1.22.0
+* Updated Ruby version to 3.3.0, added sorting with collations for many languages (this slowed the code almost 2x)
 
 2022-09-17
 

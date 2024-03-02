@@ -1,11 +1,13 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.2.0.preview2'
+ruby '3.3.0'
 
+gem 'bigdecimal', require: false
+gem 'ffi-icu'
 gem 'parallel'
 gem 'rubocop', require: false
 # gem 'irbtools', require: 'irbtools/binding'
-gem 'pry'
-gem 'pry-doc'
-gem 'pry-gem', '~> 1.0'
+# gem 'pry'
+# gem 'pry-doc'
+# gem 'pry-gem'
