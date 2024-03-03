@@ -40,7 +40,7 @@ The new optimized Golang code version is very fast, slower than Rust but faster 
 
 * Crystal = currently supports only Turkish collations. Probably because the language is young and does not have a large enough community or company behind it (as March 2024 still no more collations)
 
-* Golang = has rules for many languages. You can see the influence of a large company and community which makes Golang a mature solution. Sorting slowed the whole task down significantly, but the result is correct (in this case I only checked the results for the Polish language)
+* Golang = has rules for many languages. You can see the influence of a large company and community which makes Golang a mature solution similar to Python. ~~Sorting slowed the whole task down significantly, but the result is correct (in this case I only checked the results for the Polish language)~~
 
 ### Kudos
 
