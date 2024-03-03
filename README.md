@@ -18,6 +18,7 @@ The following results are for 123 unique utf-8 Bible text files in 23 languages 
 2. Golang 1.22.0       = 1.40s, sorting with collations: 1.71s
 3. Python 3.12.2       = 5.69, sorting with collations: 6.04s
 4. Crystal 1.5.1       = 5.61s
+4. Crystal 1.11.2      = 13.27s
 5. Elixir 1.14.0       = 7.34s
 6. Julia 1.8.1         = 12.13s, sorting: 12.22s
 7. Ruby 3.3.0          = 12.63s, sorting with collations: 22.00s
@@ -29,15 +30,15 @@ The new optimized Golang code version is very fast, slower than Rust but faster 
 
 * Rust = the current example uses [lexical-sort](https://lib.rs/crates/lexical-sort) which is not perfect. [There is no standard mature implementation of i18n in Rust](https://www.arewewebyet.org/topics/i18n/) at the moment.
 
-* Python = has a great implementation of [ICU](https://icu.unicode.org/related) library however it does not support arm64/M1 platform, hence I couldn't use it in this comparison.
+* Python = has a great implementation of [ICU](https://icu.unicode.org/related) library ~~however it does not support arm64/M1 platform, hence I couldn't use it in this comparison.~~
 
-* Ruby = can sort unicode text but without collations becase it can't use ICU on arm64/M1
+* Ruby = can sort unicode text ~~but without collations becase it can't use ICU on arm64/M1~~ with collations but it slowes down the code almost 2x.
 
-* Elixir = same as Python, no ICU for M1.
+* Elixir = no ICU for M1 to sort with collations.
 
 * Julia = I couldn't find a good i18 library supporting many languages.
 
-* Crystal = currently supports only Turkish collations. Probably because the language is young and does not have a large enough community or company behind it.
+* Crystal = currently supports only Turkish collations. Probably because the language is young and does not have a large enough community or company behind it (as March 2024 still no more collations)
 
 * Golang = has rules for many languages. You can see the influence of a large company and community which makes Golang a mature solution. Sorting slowed the whole task down significantly, but the result is correct (in this case I only checked the results for the Polish language)
 
@@ -54,6 +55,7 @@ The new optimized Golang code version is very fast, slower than Rust but faster 
 * Updated Python version to 3.12.2, added poetry, solved missing icu4 collations for M1 processors, added a fancy progress bar
 * Updated Golang version to 1.22.0
 * Updated Ruby version to 3.3.0, added sorting with collations for many languages (this slowed the code almost 2x)
+* Updated Crystal version to 1.11.2 (using 10 cores is slower than 8 and uzsing 8 cofres is slower than 4, all is slower than v1.5.1, strange)
 
 2022-09-17
 

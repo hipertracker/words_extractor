@@ -8,6 +8,6 @@ targets:
   example-crystal:
     main: src/example-crystal.cr
 
-crystal: 1.5.1
+crystal: 1.11.2
 
 license: MIT

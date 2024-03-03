@@ -17,8 +17,10 @@ module Example::Crystal
     channel = Channel(Tuple(String, Int64)).new
     srcPath = "../data/??/**/*.yml"
     paths = Dir.glob(srcPath, follow_symlinks: true)
+
     count = paths.size
     paths.each do |path|
+      puts(::sprintf("[%3d/%3d] %s", file_count + 1, count, path))
       if concurrent
         spawn do
           channel.send worker(path, outdir, with_sorting)
@@ -50,6 +52,7 @@ module Example::Crystal
     end
 
     meta = File.open(path) { |file| YAML.parse(file) }
+    puts(path)
     outfilepath = %Q(#{outdir}/#{meta["lang"]}-#{meta["code"]}.txt)
     File.write(outfilepath, words.join("\n"))
     filesize = File.size(filepath)
