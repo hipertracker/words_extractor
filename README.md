@@ -6,7 +6,7 @@ A notable challenge in sorting words arises from the necessity to accommodate so
 
 ## Results
 
-The results presented here are based on 123 unique UTF-8 Bible text files in 23 languages, as utilized on the mybible.pl site. These files occupy 504MB. (The repository contains only a few sample files in the 'data' folder. To test additional data, you can create multiple files by cloning the .txt (and the associated .yml) files under different names.)
+The results presented here are based on 123 unique UTF-8 Bible text files in 23 languages, as utilized on the [mybible.pl](ybible.pl) site. These files occupy 504MB. (The repository contains only a few sample files in the 'data' folder. To test additional data, you can create multiple files by cloning the .txt (and the associated .yml) files under different names.)
 
 
 * Platform: macOS 14.3.1
