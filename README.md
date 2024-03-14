@@ -16,12 +16,12 @@ The following results are for 123 unique utf-8 Bible text files in 23 languages 
 <pre>
 1. Rust 1.63           = 1.15s, sorting: 1.64s
 2. Golang 1.22.0       = 1.40s, sorting with collations: 1.71s
-3. Python 3.12.2       = 5.69, sorting with collations: 6.04s
-4. Crystal 1.5.1       = 5.61s
-4. Crystal 1.11.2      = 13.27s
+3. Crystal 1.5.1       = 5.61s
+4. Python 3.12.2       = 5.69, sorting with collations: 6.04s
 5. Elixir 1.14.0       = 7.34s
-6. Julia 1.8.1         = 12.13s, sorting: 12.22s
-7. Ruby 3.3.0          = 12.63s, sorting with collations: 22.00s
+6. Crystal 1.11.2      = 13.27s
+7. Julia 1.8.1         = 12.13s, sorting: 12.22s
+8. Ruby 3.3.0          = 12.63s, sorting with collations: 22.00s
 </pre>
 
 ### Conclusion
