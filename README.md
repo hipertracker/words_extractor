@@ -1,14 +1,13 @@
-# words_extractor
+# Example of Text File Parsing Across Several Programming Languages
 
-### Info
+The objective is to extract unique words from UTF-8 files and save the results into separate files.
 
-Example of a text file parsing in several programming languages. The goal is to extract unique words from utf-8 files and save results them into separate files.
+A notable challenge in sorting words arises from the necessity to accommodate sorting rules specific to different languages' grammars. This is a particularly complex issue that is not present in the English language, where the character set does not exceed the basic ASCII standard.
 
-The difficulty in sorting words is due to the need to handle sorting rules according to the the different languages grammary. This is quite a complex problem that does not exist for the English language where the character set does not exceed the basic ASCII standard.
+## Results
 
-### Results
+The results presented here are based on 123 unique UTF-8 Bible text files in 23 languages, as utilized on the mybible.pl site. These files occupy 504MB. (The repository contains only a few sample files in the 'data' folder. To test additional data, you can create multiple files by cloning the .txt (and the associated .yml) files under different names.)
 
-The following results are for 123 unique utf-8 Bible text files in 23 languages (used at mybible.pl site) They take 504MB. (The repo contains only a few sample files in the 'data' folder. For testing more data you could multiple files by cloning *.txt (and the associated*.yml) file under different names)
 
 * Platform: macOS 14.3.1
 * Machine: MacBook Pro 16" 64GB 2TB M1Max 10 cores.
@@ -26,7 +25,7 @@ The following results are for 123 unique utf-8 Bible text files in 23 languages 
 
 ### Conclusion
 
-The new optimized Golang code version is very fast, slower than Rust but faster than other languages. Golang is the only language at the moment with full mature i18n support for arm64/M1 platform.
+The newly optimized version of Golang code demonstrates impressive speed. It is slightly slower than Rust but outperforms other programming languages in terms of execution speed. ~~Golang is the only language at the moment with full mature i18n support for arm64/M1 platform.~~
 
 * Rust = the current example uses [lexical-sort](https://lib.rs/crates/lexical-sort) which is not perfect. [There is no standard mature implementation of i18n in Rust](https://www.arewewebyet.org/topics/i18n/) at the moment.
 
